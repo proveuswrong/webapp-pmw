@@ -10,7 +10,7 @@ export default function Claim() {
   return (
     <>
       <div>
-        <h2>Total Due: {invoice.amount}</h2>
+        <h3>Total Due: {invoice.amount}</h3>
         <p>
           {invoice.name}: {invoice.number}
         </p>

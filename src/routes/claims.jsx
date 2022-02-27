@@ -7,7 +7,7 @@ export default function Claims() {
   let [searchParams, setSearchParams] = useSearchParams();
 
   return (
-    <div style={{ display: "flex" }}>
+    <section style={{ display: "flex" }}>
       <h2> Claims</h2>
       <nav
         style={{
@@ -15,6 +15,7 @@ export default function Claims() {
           padding: "1rem",
         }}
       >
+        <h3 hide="">Navigation</h3>
         <input
           value={searchParams.get("filter") || ""}
           onChange={(event) => {
@@ -50,6 +51,6 @@ export default function Claims() {
           ))}
       </nav>
       <Outlet />
-    </div>
+    </section>
   );
 }

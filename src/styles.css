@@ -25,4 +25,9 @@ main {
 footer {
   background-color: salmon;
   margin-top: auto;
+  text-align: center;
+}
+
+nav > *[hide] {
+  display: none;
 }

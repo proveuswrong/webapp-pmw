@@ -5,6 +5,7 @@ export default function Header() {
     <header>
       <h1>Prove Me Wrong</h1>{" "}
       <nav>
+        <h2 hide="">Navigation</h2>
         <NavLink
           style={({ isActive }) => {
             return {
