@@ -1,17 +1,35 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export default function Header() {
   return (
     <header>
-      <span>Header</span>{" "}
-      <nav
-        style={{
-          borderBottom: "solid 1px",
-          paddingBottom: "1rem",
-        }}
-      >
-        <Link to="/invoices">Invoices</Link> | <Link to="/claim">Claim</Link> |{" "}
-        <Link to="/expenses">Expenses</Link>
+      <h1>Prove Me Wrong</h1>{" "}
+      <nav>
+        <NavLink
+          style={({ isActive }) => {
+            return {
+              borderBottom: "solid 1px",
+              paddingBottom: "1rem",
+              color: isActive ? "red" : "",
+            };
+          }}
+          to="/claims"
+        >
+          Claims
+        </NavLink>{" "}
+        |{" "}
+        <NavLink
+          style={({ isActive }) => {
+            return {
+              borderBottom: "solid 1px",
+              paddingBottom: "1rem",
+              color: isActive ? "red" : "",
+            };
+          }}
+          to="/expenses"
+        >
+          Expenses
+        </NavLink>
       </nav>
     </header>
   );

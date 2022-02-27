@@ -2,12 +2,13 @@ import { getInvoices } from "../data";
 import { Outlet, NavLink, useSearchParams } from "react-router-dom";
 import QueryNavLink from "../components/queryNavLink";
 
-export default function Invoices() {
+export default function Claims() {
   let invoices = getInvoices();
   let [searchParams, setSearchParams] = useSearchParams();
 
   return (
     <div style={{ display: "flex" }}>
+      <h2> Claims</h2>
       <nav
         style={{
           borderRight: "solid 1px",
@@ -41,7 +42,7 @@ export default function Invoices() {
                   color: isActive ? "red" : "",
                 };
               }}
-              to={`/invoices/${invoice.number}`}
+              to={`/claims/${invoice.number}`}
               key={invoice.number}
             >
               {invoice.name}
