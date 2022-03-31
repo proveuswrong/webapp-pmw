@@ -42,3 +42,39 @@ export function getInvoice(number) {
 export function deleteInvoice(number) {
   invoices = invoices.filter((invoice) => invoice.number !== number);
 }
+
+let claims = [
+  {
+    id: "0",
+    category: "Bug Bounty",
+    title: "Prove Me Wrong Smart Contracts Are Secure",
+    description:
+      "Prove Me Wrong smart contracts are secure. There is no vulnerability.",
+    state: "Live",
+    amount: "3",
+    accumulatedScore: "123123",
+    lastBountyUpdate: Date.now(),
+    history: [],
+  },
+
+  {
+    id: "1",
+    category: "Bug Bounty",
+    title: "Kleros Smart Contracts Are Secure",
+    description:
+      "Kleros smart contracts are secure. There is no vulnerability.",
+    state: "Live",
+    amount: "3",
+    accumulatedScore: "12312312",
+    lastBountyUpdate: Date.now(),
+    history: [],
+  },
+];
+
+export function getClaims() {
+  return claims;
+}
+
+export function getClaim(id) {
+  return claims.find((claim) => claim.id === id);
+}

@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 export default function Header() {
   return (
     <header>
-      <h1>Prove Me Wrong</h1>{" "}
+      <h1>PMW</h1>{" "}
       <nav>
         <h2 hide="">Navigation</h2>
         <NavLink

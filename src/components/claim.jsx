@@ -1,24 +1,26 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { getInvoice, deleteInvoice } from "../data";
+import { getClaim } from "../data";
 
 export default function Claim() {
   let params = useParams();
   let navigate = useNavigate();
   let location = useLocation();
-  let invoice = getInvoice(parseInt(params.invoiceId, 10));
+  let claim = getClaim(params.id);
+
+  console.debug(params.id);
 
   return (
     <>
       <div>
-        <h3>Total Due: {invoice.amount}</h3>
-        <p>
-          {invoice.name}: {invoice.number}
-        </p>
-        <p>Due Date: {invoice.due}</p>
+        <h3>{claim.title}</h3>
+        <p>{claim.category}</p>
+        <p>{claim.description}</p>
+        <p>Bounty amount: {claim.amount}</p>
+        <p>Trust score: {claim.accumulatedScore}</p>
+
         <p>
           <button
             onClick={() => {
-              deleteInvoice(invoice.number);
               navigate("/claims" + location.search);
             }}
           >

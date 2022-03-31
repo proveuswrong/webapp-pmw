@@ -1,9 +1,10 @@
-import { getInvoices } from "../data";
+import { getInvoices, getClaims } from "../data";
 import { Outlet, NavLink, useSearchParams } from "react-router-dom";
 import QueryNavLink from "../components/queryNavLink";
 
 export default function Claims() {
-  let invoices = getInvoices();
+  let claims = getClaims();
+
   let [searchParams, setSearchParams] = useSearchParams();
 
   return (
@@ -27,14 +28,14 @@ export default function Claims() {
             }
           }}
         />
-        {invoices
-          .filter((invoice) => {
+        {claims
+          .filter((claim) => {
             let filter = searchParams.get("filter");
             if (!filter) return true;
-            let name = invoice.name.toLowerCase();
+            let name = claim.title.toLowerCase();
             return name.startsWith(filter.toLowerCase());
           })
-          .map((invoice) => (
+          .map((claim) => (
             <QueryNavLink
               style={({ isActive }) => {
                 return {
@@ -43,10 +44,10 @@ export default function Claims() {
                   color: isActive ? "red" : "",
                 };
               }}
-              to={`/claims/${invoice.number}`}
-              key={invoice.number}
+              to={`/claims/${claim.id}`}
+              key={claim.id}
             >
-              {invoice.name}
+              {claim.title}
             </QueryNavLink>
           ))}
       </nav>

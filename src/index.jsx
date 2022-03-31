@@ -13,7 +13,7 @@ ReactDOM.render(
         <Route path="expenses" element={<Expenses />} />
         <Route path="claims" element={<Claims />}>
           <Route index element={<p>Select a claim</p>} />
-          <Route path=":invoiceId" element={<Claim />} />
+          <Route path=":id" element={<Claim />} />
         </Route>
         <Route path="*" element={<p>There's nothing here!</p>} />
       </Route>
