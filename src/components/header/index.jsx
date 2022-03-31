@@ -1,4 +1,6 @@
 import { NavLink } from "react-router-dom";
+import ButtonConnect from "/src/components/buttonConnect";
+import * as styles from "./index.module.scss";
 
 export default function Header() {
   return (
@@ -9,8 +11,6 @@ export default function Header() {
         <NavLink
           style={({ isActive }) => {
             return {
-              borderBottom: "solid 1px",
-              paddingBottom: "1rem",
               color: isActive ? "red" : "",
             };
           }}
@@ -22,8 +22,6 @@ export default function Header() {
         <NavLink
           style={({ isActive }) => {
             return {
-              borderBottom: "solid 1px",
-              paddingBottom: "1rem",
               color: isActive ? "red" : "",
             };
           }}
@@ -32,6 +30,7 @@ export default function Header() {
           Create
         </NavLink>
       </nav>
+      <ButtonConnect className={styles.connect} />
     </header>
   );
 }
