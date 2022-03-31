@@ -13,7 +13,7 @@ export default function Claim() {
     <>
       <div>
         <h3>{claim.title}</h3>
-        <p>{claim.category}</p>
+        <p>Category: {claim.category}</p>
         <p>{claim.description}</p>
         <p>Bounty amount: {claim.amount}</p>
         <p>Trust score: {claim.accumulatedScore}</p>
@@ -24,7 +24,7 @@ export default function Claim() {
               navigate("/claims" + location.search);
             }}
           >
-            Delete
+            Go back
           </button>
         </p>
       </div>

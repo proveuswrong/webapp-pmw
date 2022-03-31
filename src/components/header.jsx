@@ -16,7 +16,7 @@ export default function Header() {
           }}
           to="/claims"
         >
-          Claims
+          Browse
         </NavLink>{" "}
         |{" "}
         <NavLink
@@ -27,9 +27,9 @@ export default function Header() {
               color: isActive ? "red" : "",
             };
           }}
-          to="/expenses"
+          to="/create"
         >
-          Expenses
+          Create
         </NavLink>
       </nav>
     </header>

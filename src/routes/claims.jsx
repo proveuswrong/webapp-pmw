@@ -8,14 +8,9 @@ export default function Claims() {
   let [searchParams, setSearchParams] = useSearchParams();
 
   return (
-    <section style={{ display: "flex" }}>
+    <section>
       <h2> Claims</h2>
-      <nav
-        style={{
-          borderRight: "solid 1px",
-          padding: "1rem",
-        }}
-      >
+      <nav>
         <h3 hide="">Navigation</h3>
         <input
           value={searchParams.get("filter") || ""}
