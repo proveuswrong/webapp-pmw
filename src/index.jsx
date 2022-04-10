@@ -6,6 +6,7 @@ import Claims from "./routes/claims";
 import Claim from "./components/claim";
 
 const app = document.getElementById("app");
+
 ReactDOM.render(
   <BrowserRouter>
     <Routes>

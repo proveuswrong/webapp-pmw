@@ -16,11 +16,13 @@ export default function Claim() {
         <h3>{claim.title}</h3>
         <p>Category: {claim.category.name}</p>
         <p>Arbitrator Short Name: {claim.category.arbitrator.shortName}</p>
-        <p>Arbitrator Long Name: {claim.category.arbitrator.shortName}</p>
+        <p>Arbitrator Long Name: {claim.category.arbitrator.fullName}</p>
         <p>Arbitrator Fee: {claim.category.arbitrator.shortName}</p>
         <p>
           Arbitration Fee:{" "}
-          {claim.category.arbitrator.feePerVote * claim.category.jurySize}{" "}
+          {(
+            claim.category.arbitrator.feePerVote * claim.category.jurySize
+          ).toFixed(3)}{" "}
           {claim.category.arbitrator.currency}
         </p>
         <p>Jury Size: {claim.category.jurySize} votes</p>
