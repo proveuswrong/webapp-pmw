@@ -14,6 +14,7 @@ export default function Claim() {
       <div>
         <h3>{claim.title}</h3>
         <p>Category: {claim.category}</p>
+        <p>arbitrator</p>
         <p>{claim.description}</p>
         <p>Bounty amount: {claim.amount}</p>
         <p>Trust score: {claim.accumulatedScore}</p>
