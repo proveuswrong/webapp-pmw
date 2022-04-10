@@ -74,7 +74,7 @@ let claims = [
     category: categories[0],
     title: "Prove Me Wrong Smart Contracts Are Secure",
     description:
-      "Prove Me Wrong smart contracts are secure. There is no vulnerability. Bounty amount is randomized.",
+      "Prove Me Wrong smart contracts are secure. There is no vulnerability. Bounty amount and accumulated trust score is randomized.",
     state: "Live",
     amount: Math.random() * 3,
     currency: "ETH",
