@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { EthereumContext } from "../../App";
+import { EthereumContext } from "../../data/ethereumProvider";
 
 export default function ButtonConnect({ className }) {
   const [isButtonEnabled, setButtonEnabled] = useState(true);

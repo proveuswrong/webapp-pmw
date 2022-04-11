@@ -1,4 +1,4 @@
-import { EthereumContext } from "../App";
+import { EthereumContext } from "../data/ethereumProvider";
 
 export default function Create(props) {
   // This component should consume global Ethereum context.
@@ -7,9 +7,7 @@ export default function Create(props) {
     <EthereumContext.Consumer>
       {(value) => (
         <h2>
-          Create
-          <br />
-          {value.accounts[0]}
+          Claims <br /> {value.accounts[0]}
           <br /> {value.chainId}
         </h2>
       )}

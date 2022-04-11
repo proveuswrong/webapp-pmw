@@ -1,7 +1,7 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { getClaim, getTrustScore } from "../data";
 import Interval from "react-interval-rerender";
-import { EthereumContext } from "../App";
+import { EthereumContext } from "../data/ethereumProvider";
 
 export default function Claim() {
   let params = useParams();
