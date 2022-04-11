@@ -1,22 +1,26 @@
 import { getInvoices, getClaims } from "../data";
 import { Outlet, NavLink, useSearchParams } from "react-router-dom";
 import QueryNavLink from "../components/queryNavLink";
-import { useOutletContext } from "react-router-dom";
+import { EthereumContext } from "../App";
 
 export default function Claims(props) {
   let claims = getClaims();
   let [searchParams, setSearchParams] = useSearchParams();
 
-  const [{ accounts, chainId }, setter] = useOutletContext();
   // This component should consume global Ethereum context.
 
   return (
     <section>
       <button onClick={() => setter({ chainId: "1" })}> Set chainId to 1 </button>
-      <h2>
-        Claims <br /> {accounts[0]}
-        <br /> {chainId}
-      </h2>
+
+      <EthereumContext.Consumer>
+        {(value) => (
+          <h2>
+            Claims <br /> {value.accounts[0]}
+            <br /> {value.chainId}
+          </h2>
+        )}
+      </EthereumContext.Consumer>
       <nav>
         <h3 hide="">Navigation</h3>
         <input

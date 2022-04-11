@@ -1,13 +1,18 @@
-import { useOutletContext } from "react-router-dom";
+import { EthereumContext } from "../App";
 
 export default function Create(props) {
-  const [{ accounts, chainId }, setter] = useOutletContext();
   // This component should consume global Ethereum context.
 
   return (
-    <h2>
-      Create <br /> {accounts[0]}
-      <br /> {chainId}
-    </h2>
+    <EthereumContext.Consumer>
+      {(value) => (
+        <h2>
+          Create
+          <br />
+          {value.accounts[0]}
+          <br /> {value.chainId}
+        </h2>
+      )}
+    </EthereumContext.Consumer>
   );
 }

@@ -1,7 +1,7 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { getClaim, getTrustScore } from "../data";
 import Interval from "react-interval-rerender";
-import { useOutletContext } from "react-router-dom";
+import { EthereumContext } from "../App";
 
 export default function Claim() {
   let params = useParams();
@@ -10,15 +10,20 @@ export default function Claim() {
   let claim = getClaim(params.id);
 
   let reRenderInMs = 500;
-  const [{ accounts, chainId }, setter] = useOutletContext();
   // This component should consume global Ethereum context.
 
   return (
     <>
       <div>
-        {accounts[0]}
-        <br />
-        {chainId}
+        <EthereumContext.Consumer>
+          {(value) => (
+            <h2>
+              {value.accounts[0]}
+              <br /> {value.chainId}
+            </h2>
+          )}
+        </EthereumContext.Consumer>
+
         <h3>{claim.title}</h3>
         <p>Category: {claim.category.name}</p>
         <p>Arbitrator Short Name: {claim.category.arbitrator.shortName}</p>
