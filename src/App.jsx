@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import React, { Component } from "react";
 
 export default class App extends React.Component {
+  // This component should provide global Ethereum state.
   constructor(props) {
     super(props);
     this.state = {

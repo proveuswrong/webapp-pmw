@@ -1,6 +1,7 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { getClaim, getTrustScore } from "../data";
 import Interval from "react-interval-rerender";
+import { useOutletContext } from "react-router-dom";
 
 export default function Claim() {
   let params = useParams();
@@ -9,20 +10,22 @@ export default function Claim() {
   let claim = getClaim(params.id);
 
   let reRenderInMs = 500;
+  const [{ accounts, chainId }, setter] = useOutletContext();
+  // This component should consume global Ethereum context.
 
   return (
     <>
       <div>
+        {accounts[0]}
+        <br />
+        {chainId}
         <h3>{claim.title}</h3>
         <p>Category: {claim.category.name}</p>
         <p>Arbitrator Short Name: {claim.category.arbitrator.shortName}</p>
         <p>Arbitrator Long Name: {claim.category.arbitrator.fullName}</p>
         <p>Arbitrator Fee: {claim.category.arbitrator.shortName}</p>
         <p>
-          Arbitration Fee:{" "}
-          {(
-            claim.category.arbitrator.feePerVote * claim.category.jurySize
-          ).toFixed(3)}{" "}
+          Arbitration Fee: {(claim.category.arbitrator.feePerVote * claim.category.jurySize).toFixed(3)}{" "}
           {claim.category.arbitrator.currency}
         </p>
         <p>Jury Size: {claim.category.jurySize} votes</p>
@@ -36,14 +39,10 @@ export default function Claim() {
           Trust Score:{" "}
           <big>
             <b>
-              <Interval delay={reRenderInMs}>
-                {() => getTrustScore(params.id).slice(0, -3)}
-              </Interval>
+              <Interval delay={reRenderInMs}>{() => getTrustScore(params.id).slice(0, -3)}</Interval>
             </b>
           </big>
-          <Interval delay={reRenderInMs}>
-            {() => getTrustScore(params.id).slice(-3)}
-          </Interval>
+          <Interval delay={reRenderInMs}>{() => getTrustScore(params.id).slice(-3)}</Interval>
         </p>
 
         <p>

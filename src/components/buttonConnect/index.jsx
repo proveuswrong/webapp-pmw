@@ -1,20 +1,16 @@
-import { useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import React, { useState } from "react";
 
 export default function ButtonConnect({ className }) {
-  const [account, setAccount] = useState();
-  const [network, setNetwork] = useState();
   const [isButtonEnabled, setButtonEnabled] = useState(true);
 
-  if (!account)
-    ethereum.request({ method: "eth_accounts" }).then((accounts) => {
-      if (accounts.length > 0) setAccount(accounts[0]);
-    });
+  // This component should consume global Ethereum context.
 
   return (
-    <button id="buttonConnect" className={className} onClick={connect} disabled={!isButtonEnabled}>
-      {isButtonEnabled ? (account ? account : "Connect") : "Asking for permission..."}
-    </button>
+    <>
+      <button id="buttonConnect" className={className} onClick={connect} disabled={!isButtonEnabled}>
+        {isButtonEnabled ? "Connect" : "Asking for permission..."}
+      </button>
+    </>
   );
 
   function connect() {
@@ -33,14 +29,5 @@ export default function ButtonConnect({ className }) {
       .finally(() => {
         setButtonEnabled(true);
       });
-  }
-
-  function handleChainChanged(_chainId) {
-    setNetwork(_chainId);
-  }
-
-  function handleAccountsChanged(accounts) {
-    setAccount(accounts[0]);
-    setNetwork(ethereum.chainId);
   }
 }

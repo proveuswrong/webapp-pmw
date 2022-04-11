@@ -5,14 +5,14 @@ import { useOutletContext } from "react-router-dom";
 
 export default function Claims(props) {
   let claims = getClaims();
-
   let [searchParams, setSearchParams] = useSearchParams();
 
   const [{ accounts, chainId }, setter] = useOutletContext();
+  // This component should consume global Ethereum context.
 
   return (
     <section>
-      <button onClick={() => setter({ chainId: "1" })}> asd</button>
+      <button onClick={() => setter({ chainId: "1" })}> Set chainId to 1 </button>
       <h2>
         Claims <br /> {accounts[0]}
         <br /> {chainId}
