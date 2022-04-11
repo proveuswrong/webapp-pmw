@@ -10,7 +10,6 @@ export default function Claim() {
   let claim = getClaim(params.id);
 
   let reRenderInMs = 500;
-  // This component should consume global Ethereum context.
 
   return (
     <>

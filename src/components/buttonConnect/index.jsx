@@ -4,19 +4,15 @@ import { EthereumContext } from "../../data/ethereumProvider";
 export default function ButtonConnect({ className }) {
   const [isButtonEnabled, setButtonEnabled] = useState(true);
 
-  // This component should consume global Ethereum context.
-
   return (
-    <>
-      <EthereumContext.Consumer>
-        {(value) => (
-          <button id="buttonConnect" className={className} onClick={connect} disabled={!isButtonEnabled}>
-            {value.accounts[0]} @ {value.chainId}
-          </button>
-        )}
-        {/* prints: Reed */}
-      </EthereumContext.Consumer>
-    </>
+    <EthereumContext.Consumer>
+      {(value) => (
+        <button id="buttonConnect" className={className} onClick={connect} disabled={!isButtonEnabled}>
+          {value.accounts[0]} @ {value.chainId}
+        </button>
+      )}
+      {/* prints: Reed */}
+    </EthereumContext.Consumer>
   );
 
   function connect() {
