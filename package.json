@@ -23,5 +23,7 @@
     "start": "parcel",
     "build": "parcel build"
   },
-  "prettier": {}
+  "prettier": {
+    "printWidth": 120
+  }
 }

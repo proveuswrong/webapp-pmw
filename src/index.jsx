@@ -4,6 +4,7 @@ import App from "./App";
 import Create from "./routes/create";
 import Claims from "./routes/claims";
 import Claim from "./components/claim";
+import Ethereum from "./data/ethereum";
 
 const app = document.getElementById("app");
 

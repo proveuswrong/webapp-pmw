@@ -1,15 +1,22 @@
 import { getInvoices, getClaims } from "../data";
 import { Outlet, NavLink, useSearchParams } from "react-router-dom";
 import QueryNavLink from "../components/queryNavLink";
+import { useOutletContext } from "react-router-dom";
 
-export default function Claims() {
+export default function Claims(props) {
   let claims = getClaims();
 
   let [searchParams, setSearchParams] = useSearchParams();
 
+  const [{ accounts, chainId }, setter] = useOutletContext();
+
   return (
     <section>
-      <h2> Claims</h2>
+      <button onClick={() => setter({ chainId: "1" })}> asd</button>
+      <h2>
+        Claims <br /> {accounts[0]}
+        <br /> {chainId}
+      </h2>
       <nav>
         <h3 hide="">Navigation</h3>
         <input
