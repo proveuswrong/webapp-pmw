@@ -42,10 +42,14 @@ export default class App extends React.Component {
     const { accounts, chainId } = this.state;
     return (
       <>
-        <Layout>
-          <Outlet context={[this.state, this.setState]} />
-        </Layout>
+        <EthereumContext.Provider value={this.state}>
+          <Layout>
+            <Outlet context={[this.state, this.setState]} />
+          </Layout>
+        </EthereumContext.Provider>
       </>
     );
   }
 }
+
+export const EthereumContext = React.createContext();

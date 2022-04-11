@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { EthereumContext } from "../../App";
 
 export default function ButtonConnect({ className }) {
   const [isButtonEnabled, setButtonEnabled] = useState(true);
@@ -7,9 +8,14 @@ export default function ButtonConnect({ className }) {
 
   return (
     <>
-      <button id="buttonConnect" className={className} onClick={connect} disabled={!isButtonEnabled}>
-        {isButtonEnabled ? "Connect" : "Asking for permission..."}
-      </button>
+      <EthereumContext.Consumer>
+        {(value) => (
+          <button id="buttonConnect" className={className} onClick={connect} disabled={!isButtonEnabled}>
+            {value.accounts[0]} @ {value.chainId}
+          </button>
+        )}
+        {/* prints: Reed */}
+      </EthereumContext.Consumer>
     </>
   );
 
