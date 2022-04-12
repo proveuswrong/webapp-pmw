@@ -1,4 +1,4 @@
-import { getInvoices, getClaims } from "../data";
+import {  getClaims } from "../data";
 import { Outlet, NavLink, useSearchParams } from "react-router-dom";
 import QueryNavLink from "../components/queryNavLink";
 import { EthereumContext } from "../data/ethereumProvider";
