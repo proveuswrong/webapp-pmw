@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-export default class EthereumProvider extends React.Component {
+export default class EthereumProvider extends Component {
   constructor(props) {
     super(props);
     this.state = {
