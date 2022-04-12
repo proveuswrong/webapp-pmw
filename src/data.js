@@ -108,7 +108,7 @@ export function getClaim(id) {
 }
 
 export function getTrustScore(id) {
-  const claim = claims.find((claim) => claim.id === id);
+  const claim = claims.find((c) => c.id === id);
 
   const score = (
     claim.accumulatedScore +
