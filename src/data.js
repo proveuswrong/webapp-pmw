@@ -110,10 +110,10 @@ export function getClaim(id) {
 export function getTrustScore(id) {
   const claim = claims.find((c) => c.id === id);
 
-  const score = (
+  return (
     claim.accumulatedScore +
     (Math.floor(Date.now() / 1000) - claim.lastBountyUpdate) * claim.amount
   ).toFixed(0);
 
-  return score;
+  
 }
