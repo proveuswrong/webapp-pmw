@@ -6,11 +6,9 @@ import EthereumProvider from "./data/ethereumProvider.jsx";
 export default class App extends React.Component {
   render() {
     return (
-      <EthereumProvider>
-        <Layout>
-          <Outlet />
-        </Layout>
-      </EthereumProvider>
+      <Layout>
+        <Outlet />
+      </Layout>
     );
   }
 }

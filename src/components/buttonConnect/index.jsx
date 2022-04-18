@@ -1,15 +1,22 @@
 import React, { useState } from "react";
-import { EthereumContext } from "../../data/ethereumProvider";
+import { EthereumContext, chains } from "../../data/ethereumProvider";
 
 export default function ButtonConnect({ className }) {
-  const [isButtonEnabled, setButtonEnabled] = useState(true);
+  const [awaitingUserPermission, setAwaitingUserPermission] = useState(true);
 
   return (
     <EthereumContext.Consumer>
       {(value) => (
-        <button id="buttonConnect" className={className} onClick={connect} disabled={!isButtonEnabled}>
-          {value.accounts[0]} @ {value.chainId}
-        </button>
+        <div className={className}>
+          <button
+            id="buttonConnect"
+            onClick={() => {
+              value.accounts.length < 1 ? connect() : console.log("There is a connected account already.");
+            }}
+          >
+            {value.accounts[0] || "Click to Connect Your Account"}
+          </button>
+        </div>
       )}
       {/* prints: Reed */}
     </EthereumContext.Consumer>
@@ -17,7 +24,7 @@ export default function ButtonConnect({ className }) {
 
   function connect() {
     console.debug("Asking users permission to connect.");
-    setButtonEnabled(false);
+    setAwaitingUserPermission(true);
     ethereum
       .request({ method: "eth_requestAccounts" })
       .catch((error) => {
@@ -29,7 +36,7 @@ export default function ButtonConnect({ className }) {
         }
       })
       .finally(() => {
-        setButtonEnabled(true);
+        setAwaitingUserPermission(false);
       });
   }
 }
