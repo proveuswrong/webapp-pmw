@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import { EthereumContext, chains } from "../../data/ethereumProvider";
+import React from "react";
+import {EthereumContext, chains} from "../../data/ethereumProvider";
 
-export default function ButtonSelectNetwork({ className }) {
-  const [awaitingUserPermission, setAwaitingUserPermission] = useState(true);
+export default function ButtonSelectNetwork({className}) {
 
   return (
     <EthereumContext.Consumer>

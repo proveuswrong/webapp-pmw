@@ -1,6 +1,7 @@
-import { Outlet, NavLink, useSearchParams } from "react-router-dom";
-import { EthereumContext, chains } from "../../data/ethereumProvider";
-export default function EthereumProviderErrors(props) {
+import {Outlet} from "react-router-dom";
+import {EthereumContext} from "../../data/ethereumProvider";
+
+export default function EthereumProviderErrors() {
   return (
     <section>
       <EthereumContext.Consumer>
@@ -10,7 +11,7 @@ export default function EthereumProviderErrors(props) {
           </h2>
         )}
       </EthereumContext.Consumer>
-      <Outlet />
+      <Outlet/>
     </section>
   );
 }

@@ -1,9 +1,9 @@
-import {  getClaims } from "../data";
-import { Outlet, NavLink, useSearchParams } from "react-router-dom";
+import {getClaims} from "../data";
+import {Outlet, useSearchParams} from "react-router-dom";
 import QueryNavLink from "../components/queryNavLink";
-import { EthereumContext } from "../data/ethereumProvider";
+import {EthereumContext} from "../data/ethereumProvider";
 
-export default function Claims(props) {
+export default function Claims() {
   let claims = getClaims();
   let [searchParams, setSearchParams] = useSearchParams();
 
@@ -14,8 +14,8 @@ export default function Claims(props) {
       <EthereumContext.Consumer>
         {(value) => (
           <h2>
-            Claims <br /> {value.accounts[0]}
-            <br /> {value.chainId}
+            Claims <br/> {value.accounts[0]}
+            <br/> {value.chainId}
           </h2>
         )}
       </EthereumContext.Consumer>
@@ -26,7 +26,7 @@ export default function Claims(props) {
           onChange={(event) => {
             let filter = event.target.value;
             if (filter) {
-              setSearchParams({ filter });
+              setSearchParams({filter});
             } else {
               setSearchParams({});
             }
@@ -41,7 +41,7 @@ export default function Claims(props) {
           })
           .map((claim) => (
             <QueryNavLink
-              style={({ isActive }) => {
+              style={({isActive}) => {
                 return {
                   display: "block",
                   margin: "1rem 0",
@@ -55,7 +55,7 @@ export default function Claims(props) {
             </QueryNavLink>
           ))}
       </nav>
-      <Outlet />
+      <Outlet/>
     </section>
   );
 }

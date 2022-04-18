@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
 
 export default class EthereumProvider extends Component {
@@ -25,9 +25,9 @@ export default class EthereumProvider extends Component {
   }
 
   initializeProvider() {
-    this.setState({ isProviderDetected: true });
-    ethereum.request({ method: "eth_chainId" }).then(this.handleChainChanged);
-    ethereum.request({ method: "eth_accounts" }).then(this.handleAccountsChanged);
+    this.setState({isProviderDetected: true});
+    ethereum.request({method: "eth_chainId"}).then(this.handleChainChanged);
+    ethereum.request({method: "eth_accounts"}).then(this.handleAccountsChanged);
 
     ethereum.on("accountsChanged", this.handleAccountsChanged);
     ethereum.on("chainChanged", this.handleChainChanged);
@@ -41,31 +41,29 @@ export default class EthereumProvider extends Component {
     } else {
       console.log("Accounts changed.");
     }
-    this.setState({ accounts: accounts });
+    this.setState({accounts: accounts});
   }
 
   handleChainChanged(chainId) {
     console.log("Chain changed.");
-    this.setState({ chainId: chainId });
+    this.setState({chainId: chainId});
   }
 
   handleConnected() {
     console.log("Connected to Ethereum.");
-    this.setState({ isConnected: true });
+    this.setState({isConnected: true});
   }
 
   handleDisconnected() {
     console.log("Disconnect to Ethereum.");
-    this.setState({ isConnected: false });
+    this.setState({isConnected: false});
   }
 
   render() {
-    console.log(this.state);
-    const { accounts, chainId, isConnected } = this.state;
     return <EthereumContext.Provider value={this.state}> {this.props.children}</EthereumContext.Provider>;
   }
 }
 
 export const EthereumContext = React.createContext();
 
-export const chains = { "0x1": { name: "Ethereum Mainnet" }, "0x4": { name: "Ethereum Testnet Rinkeby" } };
+export const chains = {"0x1": {name: "Ethereum Mainnet"}, "0x4": {name: "Ethereum Testnet Rinkeby"}};

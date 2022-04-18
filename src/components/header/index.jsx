@@ -1,8 +1,9 @@
-import { NavLink } from "react-router-dom";
+import {NavLink} from "react-router-dom";
 import ButtonConnect from "/src/components/buttonConnect";
 import ButtonSelectNetwork from "/src/components/buttonSelectNetwork";
 
 import * as styles from "./index.module.scss";
+
 
 export default function Header() {
   return (
@@ -11,40 +12,34 @@ export default function Header() {
       <nav>
         <h2 hide="">Navigation</h2>
         <NavLink
-          style={({ isActive }) => {
-            return {
-              color: isActive ? "red" : "",
-            };
-          }}
+          style={({isActive}) => ({
+            color: isActive ? "red" : ""
+          })}
           to="/"
         >
           Home
         </NavLink>{" "}
         <NavLink
-          style={({ isActive }) => {
-            return {
-              color: isActive ? "red" : "",
-            };
-          }}
+          style={({isActive}) => ({
+            color: isActive ? "red" : ""
+          })}
           to="/claims"
         >
           Browse
         </NavLink>{" "}
         |{" "}
         <NavLink
-          style={({ isActive }) => {
-            return {
-              color: isActive ? "red" : "",
-            };
-          }}
+          style={({isActive}) => ({
+            color: isActive ? "red" : ""
+          })}
           to="/create"
         >
           Create
         </NavLink>
       </nav>
       <div className={styles.connection}>
-        <ButtonConnect />
-        <ButtonSelectNetwork />
+        <ButtonConnect/>
+        <ButtonSelectNetwork/>
       </div>
     </header>
   );

@@ -1,7 +1,7 @@
-import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { getClaim, getTrustScore } from "../data";
+import {useParams, useNavigate, useLocation} from "react-router-dom";
+import {getClaim, getTrustScore} from "../data";
 import Interval from "react-interval-rerender";
-import { EthereumContext } from "../data/ethereumProvider";
+import {EthereumContext} from "../data/ethereumProvider";
 
 export default function Claim() {
   let params = useParams();
@@ -18,7 +18,7 @@ export default function Claim() {
           {(value) => (
             <h2>
               {value.accounts[0]}
-              <br /> {value.chainId}
+              <br/> {value.chainId}
             </h2>
           )}
         </EthereumContext.Consumer>
@@ -33,7 +33,7 @@ export default function Claim() {
           {claim.category.arbitrator.currency}
         </p>
         <p>Jury Size: {claim.category.jurySize} votes</p>
-        <br />
+        <br/>
         <p>Description: {claim.description}</p>
         <p>
           Bounty Amount: {claim.amount.toFixed(3)} {claim.currency}
