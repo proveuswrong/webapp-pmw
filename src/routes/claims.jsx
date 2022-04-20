@@ -1,13 +1,50 @@
-import {getClaims} from "../data";
-import {Outlet, useSearchParams} from "react-router-dom";
+import {getClaims, getRealClaims} from "../data";
+import {Outlet, useSearchParams, Link} from "react-router-dom";
 import QueryNavLink from "../components/queryNavLink";
 import {EthereumContext} from "../data/ethereumProvider";
+import React, {useState, useEffect} from "react";
+
+const ipfsGateway = 'https://ipfs.kleros.io'
 
 export default function Claims() {
-  let claims = getClaims();
+  const [claims, setClaims] = useState();
+  const [claimContents, setClaimContents] = useState()
   let [searchParams, setSearchParams] = useSearchParams();
 
-  // This component should consume global Ethereum context.
+  useEffect(() => {
+    let didCancel = false;
+
+    console.debug('building claims')
+
+    async function fetchFromGraph() {
+      if (!didCancel) {
+        let data = await getRealClaims();
+        console.log(data)
+        setClaims(data)
+      }
+    }
+
+    fetchFromGraph()
+
+    return () => {
+      didCancel = true
+    }
+
+  }, [])
+
+
+  useEffect(() => {
+    console.debug('building claimContents')
+    console.debug(claims)
+    if (claims)
+      Promise.all(claims.map((claim) => fetch(ipfsGateway + claim.claimID).then(response => response.json()).then(data => setClaimContents((prevState) => ({
+        ...prevState,
+        [claim.claimID]: {title: data.title, description: data.description}
+      })))))
+
+
+  }, [claims])
+
 
   return (
     <section>
@@ -19,43 +56,10 @@ export default function Claims() {
           </h2>
         )}
       </EthereumContext.Consumer>
-      <nav>
-        <h3 hide="">Navigation</h3>
-        <input
-          value={searchParams.get("filter") || ""}
-          onChange={(event) => {
-            let filter = event.target.value;
-            if (filter) {
-              setSearchParams({filter});
-            } else {
-              setSearchParams({});
-            }
-          }}
-        />
-        {claims
-          .filter((claim) => {
-            let filter = searchParams.get("filter");
-            if (!filter) return true;
-            let name = claim.title.toLowerCase();
-            return name.startsWith(filter.toLowerCase());
-          })
-          .map((claim) => (
-            <QueryNavLink
-              style={({isActive}) => {
-                return {
-                  display: "block",
-                  margin: "1rem 0",
-                  color: isActive ? "red" : "",
-                };
-              }}
-              to={`/claims/${claim.id}`}
-              key={claim.id}
-            >
-              {claim.title}
-            </QueryNavLink>
-          ))}
-      </nav>
+      {claims && Object.entries(claims).map(([key, value]) => <div key={key}><Link
+        to={value.id}>{claimContents?.[value.claimID]?.title}</Link></div>)}
       <Outlet/>
     </section>
   );
 }
+

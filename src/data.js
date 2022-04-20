@@ -65,39 +65,77 @@ let arbitrators = {
 };
 
 let categories = {
-  0: { name: "Bug Bounty", arbitrator: arbitrators[4], jurySize: 3 },
+  0: {name: "Bug Bounty", arbitrator: arbitrators[4], jurySize: 3},
 };
 
 let claims = [
   {
     id: "0",
     category: categories[0],
-    title: "Prove Me Wrong Smart Contracts Are Secure",
-    description:
-      "Prove Me Wrong smart contracts are secure. There is no vulnerability. Bounty amount and accumulated trust score is randomized.",
+    content: '/ipfs/QmWRmqin6ZLG7RgzDkXufmaDr9wGDxYUQUaXbaPVKvsQbn/claim.json',
     state: "Live",
     amount: Math.random() * 3,
     currency: "ETH",
     accumulatedScore: Math.pow(10, Math.floor(Math.random() * 5)) * 1000,
     lastBountyUpdate: Math.floor(Date.now() / 1000),
     history: [],
-  },
-
-  {
-    id: "1",
-    category: categories[0],
-    title: "Kleros Smart Contracts Are Secure",
-    description:
-      "Kleros smart contracts are secure. There is no vulnerability.",
-    state: "Live",
-    amount: 3,
-    currency: "ETH",
-    // accumulatedScore: Math.floor(Math.random() * 1000000000000),
-    accumulatedScore: Math.pow(10, Math.floor(Math.random() * 5)) * 1000,
-    lastBountyUpdate: Math.floor(Date.now() / 1000),
-    history: [],
-  },
+  }
 ];
+
+export const getRealClaims = () => {
+  return fetch("https://api.studio.thegraph.com/query/16016/pmw/0.1.16", {
+    headers: {
+      Accept: "*/*",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query: `
+       {
+  claims{
+    id
+    claimID
+    bounty
+    status
+    lastBalanceUpdate
+    disputeID
+    withdrawalPermittedAt
+    lastCalculatedScore
+  }
+}
+    `,
+    }),
+    method: "POST",
+    mode: "cors",
+  }).then(r => r.json()).then(json => json.data).then(data => data.claims)
+}
+
+export const getRealClaim = (id) => {
+  return fetch("https://api.studio.thegraph.com/query/16016/pmw/0.1.16", {
+    headers: {
+      Accept: "*/*",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query: `
+       {
+  claims(where: {id: ${id}) {
+    id
+    claimID
+    bounty
+    status
+    lastBalanceUpdate
+    disputeID
+    withdrawalPermittedAt
+    lastCalculatedScore
+  }
+}
+    `,
+    }),
+    method: "POST",
+    mode: "cors",
+  }).then(r => r.json()).then(json => json.data).then(data => data.claims)
+}
+
 
 export function getClaims() {
   return claims;
@@ -115,5 +153,5 @@ export function getTrustScore(id) {
     (Math.floor(Date.now() / 1000) - claim.lastBountyUpdate) * claim.amount
   ).toFixed(0);
 
-  
+
 }

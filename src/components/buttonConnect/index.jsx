@@ -19,7 +19,6 @@ export default function ButtonConnect({className}) {
           </button>
         </div>
       )}
-      {/* prints: Reed */}
     </EthereumContext.Consumer>
   );
 
