@@ -67,3 +67,55 @@ export default class EthereumProvider extends Component {
 export const EthereumContext = React.createContext();
 
 export const chains = {"0x1": {name: "Ethereum Mainnet"}, "0x4": {name: "Ethereum Testnet Rinkeby"}};
+export const contractInstances = {
+  '0x4': {
+    "0xD119E5b528a62C38D9eD8a90F37359f3957b3Ee1": {
+      subgraphEndpoint: 'https://api.studio.thegraph.com/query/16016/pmw/0.1.16',
+      category: 'General'
+    }
+  }
+}
+
+
+const queryTemplate = (endpoint, query) =>
+  fetch(endpoint, {
+    headers: {
+      Accept: "*/*",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query: query,
+    }),
+    method: "POST",
+    mode: "cors",
+  }).then(r => r.json()).then(json => json.data)
+
+
+export const getClaimByID = (endpoint, id) =>
+  queryTemplate(endpoint, `{
+  claims(where: {id: "${id}"}) {
+    id
+    claimID
+    bounty
+    status
+    lastBalanceUpdate
+    disputeID
+    withdrawalPermittedAt
+    lastCalculatedScore
+  }}`).then(data => data.claims[0])
+
+
+export const getAllClaims = (endpoint) =>
+  queryTemplate(endpoint, `{
+  claims {
+    id
+    claimID
+    bounty
+    status
+    lastBalanceUpdate
+    disputeID
+    withdrawalPermittedAt
+    lastCalculatedScore
+  }}`).then(data => data.claims)
+
+export const ipfsGateway = 'https://ipfs.kleros.io'

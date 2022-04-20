@@ -1,10 +1,8 @@
 import {useParams, useNavigate, useLocation} from "react-router-dom";
-import {getRealClaim, getRealClaims, getTrustScore} from "../data";
+import {getTrustScore} from "../data";
 import Interval from "react-interval-rerender";
-import {EthereumContext} from "../data/ethereumProvider";
+import {EthereumContext, getClaimByID, ipfsGateway} from "../data/ethereumProvider";
 import {useEffect, useState} from "react";
-
-const ipfsGateway = 'https://ipfs.kleros.io'
 
 
 export default function Claim() {
@@ -22,7 +20,7 @@ export default function Claim() {
 
     async function fetchFromGraph() {
       if (!didCancel) {
-        let data = await getRealClaim(params.id);
+        let data = await getClaimByID('https://api.studio.thegraph.com/query/16016/pmw/0.1.16', params.id);
         console.log(data)
         setClaim(data)
       }

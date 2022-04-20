@@ -1,10 +1,8 @@
-import {getClaims, getRealClaims} from "../data";
 import {Outlet, useSearchParams, Link} from "react-router-dom";
 import QueryNavLink from "../components/queryNavLink";
-import {EthereumContext} from "../data/ethereumProvider";
+import {EthereumContext, getAllClaims, ipfsGateway} from "../data/ethereumProvider";
 import React, {useState, useEffect} from "react";
 
-const ipfsGateway = 'https://ipfs.kleros.io'
 
 export default function Claims() {
   const [claims, setClaims] = useState();
@@ -17,7 +15,7 @@ export default function Claims() {
 
     async function fetchFromGraph() {
       if (!didCancel) {
-        let data = await getRealClaims();
+        let data = await getAllClaims('https://api.studio.thegraph.com/query/16016/pmw/0.1.16');
         console.log(data)
         setClaims(data)
       }
