@@ -14,7 +14,6 @@ export default function Claims() {
   useEffect(() => {
     let didCancel = false;
 
-    console.debug('building claims')
 
     async function fetchFromGraph() {
       if (!didCancel) {
@@ -34,14 +33,17 @@ export default function Claims() {
 
 
   useEffect(() => {
-    console.debug('building claimContents')
-    console.debug(claims)
-    if (claims)
+    let didCancel = false;
+
+    if (!didCancel && claims)
       Promise.all(claims.map((claim) => fetch(ipfsGateway + claim.claimID).then(response => response.json()).then(data => setClaimContents((prevState) => ({
         ...prevState,
         [claim.claimID]: {title: data.title, description: data.description}
       })))))
 
+    return () => {
+      didCancel = true
+    }
 
   }, [claims])
 

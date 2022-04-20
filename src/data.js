@@ -118,7 +118,7 @@ export const getRealClaim = (id) => {
     body: JSON.stringify({
       query: `
        {
-  claims(where: {id: ${id}) {
+  claims(where: {id: "${id}"}) {
     id
     claimID
     bounty
@@ -133,7 +133,7 @@ export const getRealClaim = (id) => {
     }),
     method: "POST",
     mode: "cors",
-  }).then(r => r.json()).then(json => json.data).then(data => data.claims)
+  }).then(r => r.json()).then(json => json.data).then(data => data.claims[0])
 }
 
 
@@ -145,12 +145,11 @@ export function getClaim(id) {
   return claims.find((claim) => claim.id === id);
 }
 
-export function getTrustScore(id) {
-  const claim = claims.find((c) => c.id === id);
+export function getTrustScore(claim) {
 
   return (
-    claim.accumulatedScore +
-    (Math.floor(Date.now() / 1000) - claim.lastBountyUpdate) * claim.amount
+    parseInt(claim.lastCalculatedScore) +
+    (Math.floor(Date.now() / 1000) - parseInt(claim.lastBalanceUpdate)) * parseInt(claim.bounty)
   ).toFixed(0);
 
 
