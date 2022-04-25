@@ -6,7 +6,7 @@ export default function Create() {
     <EthereumContext.Consumer>
       {(value) => (
         <h2>
-          Claims <br/> {value.accounts[0]}
+          Create <br/> {value.accounts[0]}
           <br/> {value.chainId}
         </h2>
       )}

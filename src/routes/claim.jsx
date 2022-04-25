@@ -20,7 +20,7 @@ export default function Claim() {
 
     async function fetchFromGraph() {
       if (!didCancel) {
-        let data = await getClaimByID('https://api.studio.thegraph.com/query/16016/pmw/0.1.16', params.id);
+        let data = await getClaimByID('0x4', '0xD119E5b528a62C38D9eD8a90F37359f3957b3Ee1', params.id);
         console.log(data)
         setClaim(data)
       }
@@ -70,7 +70,7 @@ export default function Claim() {
         </EthereumContext.Consumer>
 
         <h3>{!claimContent && '⚠️'} {claimContent?.title || 'Failed to fetch claim title.'} {!claimContent && '⚠️'}  </h3>
-        {/*<p>Category: {'todo'}</p>*/}
+        <p>Category: {claim?.category}</p>
         {/*<p>Arbitrator Short Name: {claim.category.arbitrator.shortName}</p>*/}
         {/*<p>Arbitrator Long Name: {claim.category.arbitrator.fullName}</p>*/}
         {/*<p>Arbitrator Fee: {claim.category.arbitrator.shortName}</p>*/}

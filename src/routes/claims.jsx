@@ -15,8 +15,8 @@ export default function Claims() {
 
     async function fetchFromGraph() {
       if (!didCancel) {
-        let data = await getAllClaims('https://api.studio.thegraph.com/query/16016/pmw/0.1.16');
-        console.log(data)
+        let data = await getAllClaims('0x4');
+
         setClaims(data)
       }
     }
@@ -62,7 +62,8 @@ export default function Claims() {
       </EthereumContext.Consumer>
       <ul>
         {claims && Object.entries(claims).map(([key, value]) => <li key={key}><Link
-          to={value.id}>{claimContents?.[value.claimID]?.title || `Unable to fetch claim data from ${value.claimID}`}</Link></li>)}
+          to={value.id || 'lost'}>{claimContents?.[value.claimID]?.title || `Unable to fetch claim data from ${value.claimID}`}</Link>
+        </li>)}
       </ul>
       <Outlet/>
     </section>

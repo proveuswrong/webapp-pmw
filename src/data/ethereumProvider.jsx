@@ -71,7 +71,7 @@ export const contractInstances = {
   '0x4': {
     "0xD119E5b528a62C38D9eD8a90F37359f3957b3Ee1": {
       subgraphEndpoint: 'https://api.studio.thegraph.com/query/16016/pmw/0.1.16',
-      category: 'General'
+      category: 'General',
     }
   }
 }
@@ -91,8 +91,10 @@ const queryTemplate = (endpoint, query) =>
   }).then(r => r.json()).then(json => json.data)
 
 
-export const getClaimByID = (endpoint, id) =>
-  queryTemplate(endpoint, `{
+export const getClaimByID = (chainID, contractAddress, id) => {
+
+  console.log(contractInstances[chainID][contractAddress])
+  return queryTemplate(contractInstances[chainID][contractAddress].subgraphEndpoint, `{
   claims(where: {id: "${id}"}) {
     id
     claimID
@@ -102,11 +104,18 @@ export const getClaimByID = (endpoint, id) =>
     disputeID
     withdrawalPermittedAt
     lastCalculatedScore
-  }}`).then(data => data.claims[0])
+  }}`).then(data => {
+    data.claims[0].contractAddress = contractAddress
+    data.claims[0].category = contractInstances[chainID][contractAddress].category
+
+    return data.claims[0]
+  })
+}
 
 
-export const getAllClaims = (endpoint) =>
-  queryTemplate(endpoint, `{
+export const getAllClaims = (chainID) => {
+  return Promise.all(Object.entries(contractInstances[chainID]).map(([key, value]) => {
+    return queryTemplate(value.subgraphEndpoint, `{
   claims {
     id
     claimID
@@ -116,6 +125,10 @@ export const getAllClaims = (endpoint) =>
     disputeID
     withdrawalPermittedAt
     lastCalculatedScore
-  }}`).then(data => data.claims)
+  }}`).then(data => {
+      return data.claims
+    })
+  })).then(arrayOfArrays => arrayOfArrays.flat())
+}
 
 export const ipfsGateway = 'https://ipfs.kleros.io'
