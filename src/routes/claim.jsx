@@ -38,10 +38,16 @@ export default function Claim() {
     let didCancel = false;
 
     if (!didCancel && claim)
-      fetch(ipfsGateway + claim.claimID).then(response => response.json()).then(data => setClaimContent((prevState) => ({
-        ...prevState,
-        title: data.title, description: data.description
-      })))
+      fetch(ipfsGateway + claim.claimID).then((response => {
+        if (!response.ok) {
+          throw new Error('Network response was not OK');
+        }
+
+        return response.json().then(data => setClaimContent((prevState) => ({
+          ...prevState,
+          title: data.title, description: data.description
+        })))
+      })).catch(console.error)
 
     return () => {
       didCancel = true
@@ -62,8 +68,8 @@ export default function Claim() {
             </h2>
           )}
         </EthereumContext.Consumer>
-        {claimContent && console.debug(claimContent)}
-        <h3>{claimContent?.title}</h3>
+
+        <h3>{!claimContent && '⚠️'} {claimContent?.title || 'Failed to fetch claim title.'} {!claimContent && '⚠️'}  </h3>
         {/*<p>Category: {'todo'}</p>*/}
         {/*<p>Arbitrator Short Name: {claim.category.arbitrator.shortName}</p>*/}
         {/*<p>Arbitrator Long Name: {claim.category.arbitrator.fullName}</p>*/}
@@ -73,7 +79,7 @@ export default function Claim() {
         {/*  {claim.category.arbitrator.currency}*/}
         {/*</p>*/}
         {/*<p>Jury Size: {claim.category.jurySize} votes</p>*/}
-        <p>{claimContent?.description}</p>
+        <p> {claimContent?.description || 'Failed to fetch claim description.'}</p>
         <p>
           Bounty Amount: {parseInt(claim?.bounty)} wei
         </p>

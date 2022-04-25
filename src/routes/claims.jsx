@@ -32,12 +32,16 @@ export default function Claims() {
 
   useEffect(() => {
     let didCancel = false;
-
     if (!didCancel && claims)
-      Promise.all(claims.map((claim) => fetch(ipfsGateway + claim.claimID).then(response => response.json()).then(data => setClaimContents((prevState) => ({
-        ...prevState,
-        [claim.claimID]: {title: data.title, description: data.description}
-      })))))
+      claims.map((claim) => fetch(ipfsGateway + claim.claimID).then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not OK');
+        }
+        return response.json().then(data => setClaimContents((prevState) => ({
+          ...prevState,
+          [claim.claimID]: {title: data.title, description: data.description}
+        })));
+      }, console.error))
 
     return () => {
       didCancel = true
@@ -56,8 +60,10 @@ export default function Claims() {
           </h2>
         )}
       </EthereumContext.Consumer>
-      {claims && Object.entries(claims).map(([key, value]) => <div key={key}><Link
-        to={value.id}>{claimContents?.[value.claimID]?.title}</Link></div>)}
+      <ul>
+        {claims && Object.entries(claims).map(([key, value]) => <li key={key}><Link
+          to={value.id}>{claimContents?.[value.claimID]?.title || `Unable to fetch claim data from ${value.claimID}`}</Link></li>)}
+      </ul>
       <Outlet/>
     </section>
   );
