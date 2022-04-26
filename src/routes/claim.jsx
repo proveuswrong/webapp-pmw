@@ -8,6 +8,7 @@ import {useEffect, useState} from "react";
 export default function Claim() {
   const [claim, setClaim] = useState()
   const [claimContent, setClaimContent] = useState()
+  const [loading, setLoading] = useState(false)
 
 
   let params = useParams();
@@ -19,10 +20,13 @@ export default function Claim() {
     let didCancel = false;
 
     async function fetchFromGraph() {
+      setLoading(true)
+
       if (!didCancel) {
         let data = await getClaimByID('0x4', '0xD119E5b528a62C38D9eD8a90F37359f3957b3Ee1', params.id);
         console.log(data)
         setClaim(data)
+        setLoading(false)
       }
     }
 
@@ -69,8 +73,9 @@ export default function Claim() {
           )}
         </EthereumContext.Consumer>
 
-        <h3>{!claimContent && '⚠️'} {claimContent?.title || 'Failed to fetch claim title.'} {!claimContent && '⚠️'}  </h3>
-        <p>Category: {claim?.category}</p>
+        <h3>{!loading && !claimContent && '⚠️'} {claimContent?.title || (loading ? 'fetching...' : 'Failed to fetch claim title.')} {!loading && !claimContent && '⚠️'}  </h3>
+        <p>Category: {claim?.category || (loading ? 'fetching...' : 'Failed to fetch claim category.')}</p>
+        {/*We need to get arbitrator address somehow. Last thing I tried is to add this field to Claim Entity on Subgraph. See 0.0.19*/}
         {/*<p>Arbitrator Short Name: {claim.category.arbitrator.shortName}</p>*/}
         {/*<p>Arbitrator Long Name: {claim.category.arbitrator.fullName}</p>*/}
         {/*<p>Arbitrator Fee: {claim.category.arbitrator.shortName}</p>*/}
@@ -79,7 +84,7 @@ export default function Claim() {
         {/*  {claim.category.arbitrator.currency}*/}
         {/*</p>*/}
         {/*<p>Jury Size: {claim.category.jurySize} votes</p>*/}
-        <p> {claimContent?.description || 'Failed to fetch claim description.'}</p>
+        <p> {claimContent?.description || (loading ? 'fetching...' : 'Failed to fetch claim description.')}</p>
         <p>
           Bounty Amount: {parseInt(claim?.bounty)} wei
         </p>
