@@ -1,5 +1,4 @@
 import {Outlet} from "react-router-dom";
-import {EthereumContext} from "../data/ethereumProvider";
 
 export default function Home() {
   return (

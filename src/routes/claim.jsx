@@ -1,8 +1,8 @@
 import {useParams, useNavigate, useLocation} from "react-router-dom";
 import {getTrustScore} from "../data";
 import Interval from "react-interval-rerender";
-import {EthereumContext, getClaimByID, ipfsGateway} from "../data/ethereumProvider";
-import {useEffect, useState, useContext} from "react";
+import {getClaimByID, ipfsGateway} from "../data/ethereumProvider";
+import {useEffect, useState} from "react";
 
 
 export default function Claim() {
@@ -12,7 +12,6 @@ export default function Claim() {
 
   const [claim, setClaim] = useState()
   const [claimContent, setClaimContent] = useState()
-  const ethereumContext = useContext(EthereumContext);
   const [fetchingClaim, setFetchingClaim] = useState(true)
   const [fetchingClaimContent, setFetchingClaimContent] = useState(true)
 
@@ -20,9 +19,11 @@ export default function Claim() {
   useEffect(() => {
     let didCancel = false;
 
-    console.log(params)
     if (!didCancel) {
-      getClaimByID(params.chain, params.contract, params.id).then(setClaim).then(setFetchingClaim(false))
+      getClaimByID(params.chain, params.contract, params.id).then((data) => {
+        setClaim(data)
+        setFetchingClaim(false)
+      })
     }
 
     return () => {
@@ -71,7 +72,7 @@ export default function Claim() {
         {/*<p>Jury Size: {claim.category.jurySize} votes</p>*/}
         <p> {claimContent?.description || (fetchingClaimContent ? 'fetching...' : 'Failed to fetch claim description.')}</p>
         <p>
-          Bounty Amount: {parseInt(claim?.bounty)} wei
+          Bounty Amount: {fetchingClaim ? 'fetching' : `${parseInt(claim?.bounty)} wei`}
         </p>
         {claim &&
           <p>
@@ -79,9 +80,11 @@ export default function Claim() {
             Trust Score:{" "}
             <big>
               <b>
-                <Interval delay={reRenderInMs}>{() => getTrustScore(claim).slice(0, -3)}</Interval>
+                {fetchingClaim ? 'Fetching claim' :
+                  <Interval delay={reRenderInMs}>{() => getTrustScore(claim).slice(0, -3)}</Interval>}
               </b>
             </big>
+
             <Interval delay={reRenderInMs}>{() => getTrustScore(claim).slice(-3)}</Interval>
           </p>
         }

@@ -1,4 +1,4 @@
-import {Outlet, useSearchParams, Link} from "react-router-dom";
+import {useSearchParams, Link} from "react-router-dom";
 import QueryNavLink from "../components/queryNavLink";
 import {EthereumContext, getAllClaims, ipfsGateway} from "../data/ethereumProvider";
 import React, {useState, useEffect, useContext} from "react";

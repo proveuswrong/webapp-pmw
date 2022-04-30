@@ -1,5 +1,3 @@
-import {EthereumContext} from "../data/ethereumProvider";
-
 export default function Create() {
 
   return (
