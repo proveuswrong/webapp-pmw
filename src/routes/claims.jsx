@@ -1,23 +1,28 @@
 import {Outlet, useSearchParams, Link} from "react-router-dom";
 import QueryNavLink from "../components/queryNavLink";
 import {EthereumContext, getAllClaims, ipfsGateway} from "../data/ethereumProvider";
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useContext} from "react";
 
 
 export default function Claims() {
   const [claims, setClaims] = useState();
   const [claimContents, setClaimContents] = useState()
+  const ethereumContext = useContext(EthereumContext);
+
+  const [fetchingClaims, setFetchingClaims] = useState(true)
+  const [loadingFetchingContents, setFetchingClaimsContents] = useState(true)
+
+
   let [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     let didCancel = false;
 
-
     async function fetchFromGraph() {
       if (!didCancel) {
-        let data = await getAllClaims('0x4');
-
+        let data = await getAllClaims(ethereumContext?.chainId);
         setClaims(data)
+        setFetchingClaims(false)
       }
     }
 
@@ -32,17 +37,21 @@ export default function Claims() {
 
   useEffect(() => {
     let didCancel = false;
-    if (!didCancel && claims)
-      claims.map((claim) => fetch(ipfsGateway + claim.claimID).then(response => {
+    if (!didCancel && claims) {
+      claims.filter(c => c != null).map((claim) => fetch(ipfsGateway + claim?.claimID).then(response => {
         if (!response.ok) {
           throw new Error('Network response was not OK');
         }
-        return response.json().then(data => setClaimContents((prevState) => ({
-          ...prevState,
-          [claim.claimID]: {title: data.title, description: data.description}
-        })));
-      }, console.error))
+        response.json().then(data => {
+          setClaimContents((prevState) => ({
+            ...prevState,
+            [claim.claimID]: {title: data.title, description: data.description}
+          }))
 
+          setFetchingClaimsContents(false)
+        });
+      }, console.error))
+    }
     return () => {
       didCancel = true
     }
@@ -52,20 +61,16 @@ export default function Claims() {
 
   return (
     <section>
-      <EthereumContext.Consumer>
-        {(value) => (
-          <h2>
-            Claims <br/> {value.accounts[0]}
-            <br/> {value.chainId}
-          </h2>
-        )}
-      </EthereumContext.Consumer>
+      <h1>Browse</h1>
+
       <ul>
-        {claims && Object.entries(claims).map(([key, value]) => <li key={key}><Link
-          to={value.id || 'lost'}>{claimContents?.[value.claimID]?.title || `Unable to fetch claim data from ${value.claimID}`}</Link>
+        {claims && Object.entries(claims.filter(c => c != null)).map(([key, value]) => <li key={key}><Link
+          to={`${ethereumContext.chainId}/${value?.contractAddress}/${value?.id}`}>{claimContents?.[value?.claimID]?.title || (!loadingFetchingContents && `Unable to fetch claim data from ${value?.claimID}`)}</Link>
         </li>)}
       </ul>
-      <Outlet/>
+      {!claims && fetchingClaims && 'Fetching claims'}
+      {claims && claims.filter(c => c != null).length == 0 && 'No claims.'}
+      {claims && loadingFetchingContents && 'Fetching claim details.'}
     </section>
   );
 }

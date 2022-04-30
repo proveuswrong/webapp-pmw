@@ -2,35 +2,28 @@ import {useParams, useNavigate, useLocation} from "react-router-dom";
 import {getTrustScore} from "../data";
 import Interval from "react-interval-rerender";
 import {EthereumContext, getClaimByID, ipfsGateway} from "../data/ethereumProvider";
-import {useEffect, useState} from "react";
+import {useEffect, useState, useContext} from "react";
 
 
 export default function Claim() {
+  const params = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [claim, setClaim] = useState()
   const [claimContent, setClaimContent] = useState()
-  const [loading, setLoading] = useState(false)
-
-
-  let params = useParams();
-  let navigate = useNavigate();
-  let location = useLocation();
+  const ethereumContext = useContext(EthereumContext);
+  const [fetchingClaim, setFetchingClaim] = useState(true)
+  const [fetchingClaimContent, setFetchingClaimContent] = useState(true)
 
 
   useEffect(() => {
     let didCancel = false;
 
-    async function fetchFromGraph() {
-      setLoading(true)
-
-      if (!didCancel) {
-        let data = await getClaimByID('0x4', '0xD119E5b528a62C38D9eD8a90F37359f3957b3Ee1', params.id);
-        console.log(data)
-        setClaim(data)
-        setLoading(false)
-      }
+    console.log(params)
+    if (!didCancel) {
+      getClaimByID(params.chain, params.contract, params.id).then(setClaim).then(setFetchingClaim(false))
     }
-
-    fetchFromGraph()
 
     return () => {
       didCancel = true
@@ -51,7 +44,7 @@ export default function Claim() {
           ...prevState,
           title: data.title, description: data.description
         })))
-      })).catch(console.error)
+      })).catch(console.error).then(setFetchingClaimContent(false))
 
     return () => {
       didCancel = true
@@ -62,19 +55,11 @@ export default function Claim() {
   let reRenderInMs = 500;
 
   return (
-    <>
+    <section>
       <div>
-        <EthereumContext.Consumer>
-          {(value) => (
-            <h2>
-              {value.accounts[0]}
-              <br/> {value.chainId}
-            </h2>
-          )}
-        </EthereumContext.Consumer>
 
-        <h3>{!loading && !claimContent && '⚠️'} {claimContent?.title || (loading ? 'fetching...' : 'Failed to fetch claim title.')} {!loading && !claimContent && '⚠️'}  </h3>
-        <p>Category: {claim?.category || (loading ? 'fetching...' : 'Failed to fetch claim category.')}</p>
+        <h3>{!fetchingClaimContent && !claimContent && '⚠️'} {claimContent?.title || (fetchingClaimContent ? 'fetching...' : 'Failed to fetch claim title.')} {!fetchingClaimContent && !claimContent && '⚠️'}  </h3>
+        <p>Category: {claim?.category}</p>
         {/*We need to get arbitrator address somehow. Last thing I tried is to add this field to Claim Entity on Subgraph. See 0.0.19*/}
         {/*<p>Arbitrator Short Name: {claim.category.arbitrator.shortName}</p>*/}
         {/*<p>Arbitrator Long Name: {claim.category.arbitrator.fullName}</p>*/}
@@ -84,7 +69,7 @@ export default function Claim() {
         {/*  {claim.category.arbitrator.currency}*/}
         {/*</p>*/}
         {/*<p>Jury Size: {claim.category.jurySize} votes</p>*/}
-        <p> {claimContent?.description || (loading ? 'fetching...' : 'Failed to fetch claim description.')}</p>
+        <p> {claimContent?.description || (fetchingClaimContent ? 'fetching...' : 'Failed to fetch claim description.')}</p>
         <p>
           Bounty Amount: {parseInt(claim?.bounty)} wei
         </p>
@@ -110,6 +95,6 @@ export default function Claim() {
           </button>
         </p>
       </div>
-    </>
+    </section>
   );
 }

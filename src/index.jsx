@@ -21,7 +21,7 @@ ReactDOM.render(
               <Route index element={<Home/>}/>
               <Route path="create" element={chains[value.chainId] ? <Create/> : <EthereumProviderErrors/>}/>
               <Route path="claims" element={chains[value.chainId] ? <Claims/> : <EthereumProviderErrors/>}/>
-              <Route path="claims/:id" element={chains[value.chainId] ? <Claim/> : <EthereumProviderErrors/>}/>
+              <Route path="claims/:chain/:contract/:id" element={chains[value.chainId] ? <Claim/> : <EthereumProviderErrors/>}/>
               <Route path="*" element={<p>There's nothing here!</p>}/>
             </Route>
           </Routes>

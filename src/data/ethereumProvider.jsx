@@ -69,13 +69,17 @@ export const EthereumContext = React.createContext();
 export const chains = {"0x1": {name: "Ethereum Mainnet"}, "0x4": {name: "Ethereum Testnet Rinkeby"}};
 export const contractInstances = {
   '0x4': {
-    "0xD119E5b528a62C38D9eD8a90F37359f3957b3Ee1": {
-      subgraphEndpoint: 'https://api.studio.thegraph.com/query/16016/pmw/0.1.16',
-      category: 'General',
+    "0x5678057C9a36697986A1003d49B73EBE6A0E9c03": {
+      subgraphEndpoint: 'https://api.studio.thegraph.com/query/16016/pmw/0.0.22',
     }
   }
 }
 
+export const categories = [
+  {
+    "name": 'Bug Bounty'
+  }
+]
 
 const queryTemplate = (endpoint, query) =>
   fetch(endpoint, {
@@ -98,6 +102,7 @@ export const getClaimByID = (chainID, contractAddress, id) => {
   claims(where: {id: "${id}"}) {
     id
     claimID
+    category
     bounty
     status
     lastBalanceUpdate
@@ -106,8 +111,7 @@ export const getClaimByID = (chainID, contractAddress, id) => {
     lastCalculatedScore
   }}`).then(data => {
     data.claims[0].contractAddress = contractAddress
-    data.claims[0].category = contractInstances[chainID][contractAddress].category
-
+    data.claims[0].category = categories[data.claims[0].category].name
     return data.claims[0]
   })
 }
@@ -126,9 +130,17 @@ export const getAllClaims = (chainID) => {
     withdrawalPermittedAt
     lastCalculatedScore
   }}`).then(data => {
-      return data.claims
+      if (data && data.claims && data.claims.length > 0) {
+        data.claims[0].contractAddress = key
+        data.claims[0].category = categories[data.claims[0].category]?.name
+        return data.claims
+      }
     })
   })).then(arrayOfArrays => arrayOfArrays.flat())
+}
+
+const monkeyPatch = (contractAddress) => {
+  // TODO Refactor out duplications
 }
 
 export const ipfsGateway = 'https://ipfs.kleros.io'
