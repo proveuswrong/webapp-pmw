@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
 
+
 export default class EthereumProvider extends Component {
   constructor(props) {
     super(props);
@@ -9,11 +10,13 @@ export default class EthereumProvider extends Component {
       chainId: "",
       isConnected: false,
       isProviderDetected: false,
+      metaEvidenceContents: []
     };
     this.handleChainChanged = this.handleChainChanged.bind(this);
     this.handleAccountsChanged = this.handleAccountsChanged.bind(this);
     this.handleConnected = this.handleConnected.bind(this);
     this.handleDisconnected = this.handleDisconnected.bind(this);
+    this.fetchMetaEvidenceContents = this.fetchMetaEvidenceContents.bind(this);
 
     this.setState = this.setState.bind(this);
   }
@@ -33,6 +36,7 @@ export default class EthereumProvider extends Component {
     ethereum.on("chainChanged", this.handleChainChanged);
     ethereum.on("connect", this.handleConnected);
     ethereum.on("disconnect", this.handleDisconnected);
+
   }
 
   handleAccountsChanged(accounts) {
@@ -47,6 +51,8 @@ export default class EthereumProvider extends Component {
   handleChainChanged(chainId) {
     console.log("Chain changed.");
     this.setState({chainId: chainId});
+    this.fetchMetaEvidenceContents(chainId)
+
   }
 
   handleConnected() {
@@ -59,27 +65,30 @@ export default class EthereumProvider extends Component {
     this.setState({isConnected: false});
   }
 
-  render() {
-    return <EthereumContext.Provider value={this.state}> {this.props.children}</EthereumContext.Provider>;
+  async fetchMetaEvidenceContents(chainId) {
+    console.log('Fetching all metaevidences...');
+    const rawMetaEvidenceList = (await getAllMetaEvidences(chainId)).map(item => item.uri)
+    const result = await Promise.allSettled(rawMetaEvidenceList.map(metaEvidenceURI =>
+      fetch(ipfsGateway + metaEvidenceURI).then(r => r.json())
+    ))
+    console.log(result)
+    this.setState({metaevidenceContents: result.map(item => item.value)})
   }
-}
 
+  render = () =>
+    <EthereumContext.Provider value={this.state}> {this.props.children}</EthereumContext.Provider>;
+}
 export const EthereumContext = React.createContext();
 
 export const chains = {"0x1": {name: "Ethereum Mainnet"}, "0x4": {name: "Ethereum Testnet Rinkeby"}};
 export const contractInstances = {
   '0x4': {
     "0x5678057C9a36697986A1003d49B73EBE6A0E9c03": {
-      subgraphEndpoint: 'https://api.studio.thegraph.com/query/16016/pmw/0.0.22',
+      subgraphEndpoint: 'https://api.studio.thegraph.com/query/16016/pmw/0.0.23',
     }
   }
 }
 
-export const categories = [
-  {
-    "name": 'Bug Bounty'
-  }
-]
 
 const queryTemplate = (endpoint, query) =>
   fetch(endpoint, {
@@ -92,12 +101,11 @@ const queryTemplate = (endpoint, query) =>
     }),
     method: "POST",
     mode: "cors",
-  }).then(r => r.json()).then(json => json.data)
+  }).then(r => r.json(), console.error(`The following query has been failed ${query}`)).then(json => json.data)
 
 
 export const getClaimByID = (chainID, contractAddress, id) => {
 
-  console.log(contractInstances[chainID][contractAddress])
   return queryTemplate(contractInstances[chainID][contractAddress].subgraphEndpoint, `{
   claims(where: {id: "${id}"}) {
     id
@@ -110,17 +118,16 @@ export const getClaimByID = (chainID, contractAddress, id) => {
     withdrawalPermittedAt
     lastCalculatedScore
   }}`).then(data => {
-    data.claims[0].contractAddress = contractAddress
-    data.claims[0].category = categories[data.claims[0].category].name
+
     return data.claims[0]
   })
 }
 
 
 export const getAllClaims = (chainID) => {
-  return Promise.all(Object.entries(contractInstances[chainID]).map(([key, value]) => {
+  return Promise.allSettled(Object.entries(contractInstances[chainID] || {}).map(([key, value]) => {
     return queryTemplate(value.subgraphEndpoint, `{
-  claims {
+  claims(orderBy: id, orderDirection: asc) {
     id
     claimID
     bounty
@@ -132,10 +139,20 @@ export const getAllClaims = (chainID) => {
   }}`).then(data => {
       if (data && data.claims && data.claims.length > 0) {
         data.claims[0].contractAddress = key
-        data.claims[0].category = categories[data.claims[0].category]?.name
         return data.claims
       }
     })
+  })).then(r => r[0].value).catch(console.error)
+}
+
+export const getAllMetaEvidences = (chainID) => {
+  return Promise.all(Object.entries(contractInstances[chainID] || {}).map(([key, value]) => {
+    return queryTemplate(value.subgraphEndpoint, `{
+  metaEvidenceEntities(orderBy: id, orderDirection:asc){
+    id
+    uri
+  }
+}`).then(data => data.metaEvidenceEntities)
   })).then(arrayOfArrays => arrayOfArrays.flat())
 }
 

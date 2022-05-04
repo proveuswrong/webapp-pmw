@@ -32,7 +32,7 @@ export default function Claims() {
       didCancel = true
     }
 
-  }, [])
+  }, [ethereumContext])
 
 
   useEffect(() => {
@@ -50,7 +50,11 @@ export default function Claims() {
 
           setFetchingClaimsContents(false)
         });
-      }, console.error))
+      }, (err) => {
+        console.error('noliy')
+      }))
+    } else {
+      setFetchingClaimsContents(false)
     }
     return () => {
       didCancel = true
@@ -62,7 +66,6 @@ export default function Claims() {
   return (
     <section>
       <h1>Browse</h1>
-
       <ul>
         {claims && Object.entries(claims.filter(c => c != null)).map(([key, value]) => <li key={key}><Link
           to={`${ethereumContext.chainId}/${value?.contractAddress}/${value?.id}`}>{claimContents?.[value?.claimID]?.title || (!loadingFetchingContents && `Unable to fetch claim data from ${value?.claimID}`)}</Link>
