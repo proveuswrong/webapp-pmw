@@ -71,8 +71,7 @@ export default class EthereumProvider extends Component {
     const result = await Promise.allSettled(rawMetaEvidenceList.map(metaEvidenceURI =>
       fetch(ipfsGateway + metaEvidenceURI).then(r => r.json())
     ))
-    console.log(result)
-    this.setState({metaevidenceContents: result.map(item => item.value)})
+    this.setState({metaEvidenceContents: result.map(item => item.value)})
   }
 
   render = () =>
@@ -101,7 +100,7 @@ const queryTemplate = (endpoint, query) =>
     }),
     method: "POST",
     mode: "cors",
-  }).then(r => r.json(), console.error(`The following query has been failed ${query}`)).then(json => json.data)
+  }).then(r => r.json()).then(json => json.data)
 
 
 export const getClaimByID = (chainID, contractAddress, id) => {
@@ -120,7 +119,7 @@ export const getClaimByID = (chainID, contractAddress, id) => {
   }}`).then(data => {
 
     return data.claims[0]
-  })
+  }).catch(err => console.error)
 }
 
 
@@ -137,23 +136,29 @@ export const getAllClaims = (chainID) => {
     withdrawalPermittedAt
     lastCalculatedScore
   }}`).then(data => {
+
       if (data && data.claims && data.claims.length > 0) {
-        data.claims[0].contractAddress = key
+        data.claims.map(claim => {
+          return claim.contractAddress = key
+        })
         return data.claims
       }
     })
-  })).then(r => r[0].value).catch(console.error)
+  })).then(r =>
+    r[0]?.value
+  ).catch(console.error)
 }
 
 export const getAllMetaEvidences = (chainID) => {
-  return Promise.all(Object.entries(contractInstances[chainID] || {}).map(([key, value]) => {
+  return Promise.allSettled(Object.entries(contractInstances[chainID] || {}).map(([key, value]) => {
     return queryTemplate(value.subgraphEndpoint, `{
   metaEvidenceEntities(orderBy: id, orderDirection:asc){
     id
     uri
   }
-}`).then(data => data.metaEvidenceEntities)
-  })).then(arrayOfArrays => arrayOfArrays.flat())
+}`).then(data => data.metaEvidenceEntities
+    )
+  })).then(r => r[0]?.value).catch(console.error)
 }
 
 const monkeyPatch = (contractAddress) => {

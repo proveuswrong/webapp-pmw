@@ -51,7 +51,7 @@ export default function Claims() {
           setFetchingClaimsContents(false)
         });
       }, (err) => {
-        console.error('noliy')
+        console.error(err)
       }))
     } else {
       setFetchingClaimsContents(false)
@@ -72,7 +72,7 @@ export default function Claims() {
         </li>)}
       </ul>
       {!claims && fetchingClaims && 'Fetching claims'}
-      {claims && claims.filter(c => c != null).length == 0 && 'No claims.'}
+      {(claims == null || (claims && claims.filter(c => c != null).length == 0)) && 'No claims.'}
       {claims && loadingFetchingContents && 'Fetching claim details.'}
     </section>
   );

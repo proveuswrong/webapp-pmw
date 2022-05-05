@@ -60,8 +60,10 @@ export default function Claim() {
     <section>
       <div>
 
+        {console.log(ethereumContext)}
+
         <h3>{!fetchingClaimContent && !claimContent && '⚠️'} {claimContent?.title || (fetchingClaimContent ? 'fetching...' : 'Failed to fetch claim title.')} {!fetchingClaimContent && !claimContent && '⚠️'}  </h3>
-        <p>Category: {ethereumContext.metaevidenceContents[claim?.category]?.category}</p>
+        <p>Category: {ethereumContext?.metaEvidenceContents[claim?.category]?.category}</p>
         {/*We need to get arbitrator address somehow. Last thing I tried is to add this field to Claim Entity on Subgraph. See 0.0.19*/}
         {/*<p>Arbitrator Short Name: {claim.category.arbitrator.shortName}</p>*/}
         {/*<p>Arbitrator Long Name: {claim.category.arbitrator.fullName}</p>*/}
