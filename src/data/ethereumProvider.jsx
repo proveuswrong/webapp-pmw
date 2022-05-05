@@ -66,7 +66,7 @@ export default class EthereumProvider extends Component {
   }
 
   async fetchMetaEvidenceContents(chainId) {
-    console.log('Fetching all metaevidences...');
+    console.log('Fetching all meta-evidences...');
     const rawMetaEvidenceList = (await getAllMetaEvidences(chainId)).map(item => item.uri)
     const result = await Promise.allSettled(rawMetaEvidenceList.map(metaEvidenceURI =>
       fetch(ipfsGateway + metaEvidenceURI).then(r => r.json())

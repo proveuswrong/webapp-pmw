@@ -16,6 +16,7 @@ export default function Claims() {
   let [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
+    console.log('Fetching claims...')
     let didCancel = false;
 
     async function fetchFromGraph() {
@@ -32,7 +33,7 @@ export default function Claims() {
       didCancel = true
     }
 
-  }, [ethereumContext])
+  }, [ethereumContext.chainId])
 
 
   useEffect(() => {
