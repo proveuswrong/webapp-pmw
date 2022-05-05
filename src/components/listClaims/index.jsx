@@ -1,10 +1,9 @@
 import {useSearchParams, Link} from "react-router-dom";
-import QueryNavLink from "../components/queryNavLink";
-import {EthereumContext, getAllClaims, ipfsGateway} from "../data/ethereumProvider";
+import {EthereumContext, getAllClaims, ipfsGateway} from "../../data/ethereumProvider";
 import React, {useState, useEffect, useContext} from "react";
 
 
-export default function Claims() {
+export default function ListClaims() {
   const [claims, setClaims] = useState();
   const [claimContents, setClaimContents] = useState()
   const ethereumContext = useContext(EthereumContext);
@@ -65,17 +64,16 @@ export default function Claims() {
 
 
   return (
-    <section>
-      <h1>Browse</h1>
+    <>
       <ul>
         {claims && Object.entries(claims.filter(c => c != null)).map(([key, value]) => <li key={key}><Link
           to={`${ethereumContext.chainId}/${value?.contractAddress}/${value?.id}`}>{claimContents?.[value?.claimID]?.title || (!loadingFetchingContents && `Unable to fetch claim data from ${value?.claimID}`)}</Link>
         </li>)}
       </ul>
       {!claims && fetchingClaims && 'Fetching claims'}
-      {(claims == null || (claims && claims.filter(c => c != null).length == 0)) && 'No claims.'}
+      {!fetchingClaims && (claims == null || (claims && claims.filter(c => c != null).length == 0)) && 'No claims.'}
       {claims && loadingFetchingContents && 'Fetching claim details.'}
-    </section>
+    </>
   );
 }
 

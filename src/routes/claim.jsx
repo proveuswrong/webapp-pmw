@@ -94,7 +94,7 @@ export default function Claim() {
         <p>
           <button
             onClick={() => {
-              navigate("/claims" + location.search);
+              navigate("/browse" + location.search);
             }}
           >
             Go back

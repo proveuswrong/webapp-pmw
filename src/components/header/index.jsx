@@ -23,7 +23,7 @@ export default function Header() {
           style={({isActive}) => ({
             color: isActive ? "red" : ""
           })}
-          to="/claims"
+          to="/browse"
         >
           Browse
         </NavLink>{" "}
