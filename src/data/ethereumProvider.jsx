@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
+import {ethers} from "ethers";
 
 
 export default class EthereumProvider extends Component {
@@ -10,13 +11,16 @@ export default class EthereumProvider extends Component {
       chainId: "",
       isConnected: false,
       isProviderDetected: false,
-      metaEvidenceContents: []
-    };
+      metaEvidenceContents: [],
+      blockNumber: 0,
+    }
+
     this.handleChainChanged = this.handleChainChanged.bind(this);
     this.handleAccountsChanged = this.handleAccountsChanged.bind(this);
     this.handleConnected = this.handleConnected.bind(this);
     this.handleDisconnected = this.handleDisconnected.bind(this);
     this.fetchMetaEvidenceContents = this.fetchMetaEvidenceContents.bind(this);
+    this.handleMessage = this.handleMessage.bind(this);
 
     this.setState = this.setState.bind(this);
   }
@@ -31,13 +35,17 @@ export default class EthereumProvider extends Component {
     this.setState({isProviderDetected: true});
     ethereum.request({method: "eth_chainId"}).then(this.handleChainChanged);
     ethereum.request({method: "eth_accounts"}).then(this.handleAccountsChanged);
+    ethereum.request({method: "eth_subscribe", params: ["newHeads"]})
+    ethereum.request({method: "eth_blockNumber"}).then(result => this.setState({blockNumber: result}))
 
     ethereum.on("accountsChanged", this.handleAccountsChanged);
     ethereum.on("chainChanged", this.handleChainChanged);
     ethereum.on("connect", this.handleConnected);
     ethereum.on("disconnect", this.handleDisconnected);
+    ethereum.on("message", this.handleMessage)
 
   }
+
 
   handleAccountsChanged(accounts) {
     if (accounts.length == 0) {
@@ -63,6 +71,11 @@ export default class EthereumProvider extends Component {
   handleDisconnected() {
     console.log("Disconnect to Ethereum.");
     this.setState({isConnected: false});
+  }
+
+  handleMessage(message) {
+    console.log(`Block number: ${message.data.result.number}`)
+    this.setState({blockNumber: message.data.result.number})
   }
 
   async fetchMetaEvidenceContents(chainId) {
@@ -166,3 +179,7 @@ const monkeyPatch = (contractAddress) => {
 }
 
 export const ipfsGateway = 'https://ipfs.kleros.io'
+
+export const BigNumber = ethers.BigNumber
+export const constants = ethers.constants
+export const utils = ethers.utils

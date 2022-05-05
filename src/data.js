@@ -69,6 +69,16 @@ export function getTrustScore(claim) {
 
   return (
     parseInt(claim.lastCalculatedScore) +
+    (Math.floor(Date.now() / 1000) - parseInt(claim.lastBalanceUpdate))
+  ).toFixed(0);
+
+
+}
+
+export function getTrustScore2(claim) {
+
+  return (
+    parseInt(claim.lastCalculatedScore) +
     (Math.floor(Date.now() / 1000) - parseInt(claim.lastBalanceUpdate)) * parseInt(claim.bounty)
   ).toFixed(0);
 

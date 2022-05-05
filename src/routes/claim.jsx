@@ -1,7 +1,6 @@
 import {useParams, useNavigate, useLocation} from "react-router-dom";
-import {getTrustScore} from "../data";
 import Interval from "react-interval-rerender";
-import {EthereumContext, getClaimByID, ipfsGateway} from "../data/ethereumProvider";
+import {EthereumContext, getClaimByID, ipfsGateway, BigNumber, constants, utils} from "../data/ethereumProvider";
 import {useEffect, useState, useContext} from "react";
 
 
@@ -54,13 +53,11 @@ export default function Claim() {
 
   }, [claim])
 
-  let reRenderInMs = 500;
+  let reRenderInMs = 1000;
 
   return (
     <section>
       <div>
-
-        {console.log(ethereumContext)}
 
         <h3>{!fetchingClaimContent && !claimContent && '⚠️'} {claimContent?.title || (fetchingClaimContent ? 'fetching...' : 'Failed to fetch claim title.')} {!fetchingClaimContent && !claimContent && '⚠️'}  </h3>
         <p>Category: {ethereumContext?.metaEvidenceContents[claim?.category]?.category}</p>
@@ -75,7 +72,11 @@ export default function Claim() {
         {/*<p>Jury Size: {claim.category.jurySize} votes</p>*/}
         <p> {claimContent?.description || (fetchingClaimContent ? 'fetching...' : 'Failed to fetch claim description.')}</p>
         <p>
-          Bounty Amount: {fetchingClaim ? 'fetching' : `${parseInt(claim?.bounty)} wei`}
+          Bounty
+          Amount: {fetchingClaim ? 'fetching' : `${parseFloat(utils.formatUnits(parseInt(claim?.bounty), 18)).toFixed(3)} ${constants.EtherSymbol}`}
+        </p>
+        <p>
+          Claim Age: {fetchingClaim ? 'fetching' : `${getTimePastSinceLastBountyUpdate(claim, ethereumContext.blockNumber)} blocks`}
         </p>
         {claim &&
           <p>
@@ -84,11 +85,14 @@ export default function Claim() {
             <big>
               <b>
                 {fetchingClaim ? 'Fetching claim' :
-                  <Interval delay={reRenderInMs}>{() => getTrustScore(claim).slice(0, -3)}</Interval>}
+                  <Interval
+                    delay={reRenderInMs}>{() => getTrustScore(claim, getTimePastSinceLastBountyUpdate(claim, ethereumContext.blockNumber)).slice(0, -3)}</Interval>}
               </b>
             </big>
 
-            <Interval delay={reRenderInMs}>{() => getTrustScore(claim).slice(-3)}</Interval>
+            <Interval
+              delay={reRenderInMs}>{() => getTrustScore(claim, getTimePastSinceLastBountyUpdate(claim, ethereumContext.blockNumber)).slice(-3)}</Interval>
+
           </p>
         }
         <p>
@@ -104,3 +108,20 @@ export default function Claim() {
     </section>
   );
 }
+
+export const getTimePastSinceLastBountyUpdate = (claim, currentBlockNumber) =>
+  parseInt(currentBlockNumber) - parseInt(claim.lastBalanceUpdate)
+
+
+export const getTrustScore = (claim, timePastSinceLastBountyUpdate) => {
+  const timeDelta = BigNumber.from(timePastSinceLastBountyUpdate)
+  const previouslyAccumulatedScore = BigNumber.from(claim.lastCalculatedScore)
+  const bounty = BigNumber.from(claim.bounty)
+  const rawScore = previouslyAccumulatedScore.add(timeDelta.mul(bounty))
+  const normalizedScore = utils.formatEther(rawScore) // Divides by 10^18 to prevent big numbers.
+  return parseInt(normalizedScore).toFixed(0)
+
+}
+
+
+

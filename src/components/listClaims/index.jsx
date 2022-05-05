@@ -65,6 +65,7 @@ export default function ListClaims() {
 
   return (
     <>
+      
       <ul>
         {claims && Object.entries(claims.filter(c => c != null)).map(([key, value]) => <li key={key}><Link
           to={`${ethereumContext.chainId}/${value?.contractAddress}/${value?.id}`}>{claimContents?.[value?.claimID]?.title || (!loadingFetchingContents && `Unable to fetch claim data from ${value?.claimID}`)}</Link>
