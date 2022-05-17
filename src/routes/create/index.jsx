@@ -1,39 +1,37 @@
-import styles from "./index.module.css"
+import styles from "./index.module.scss"
 import {useEffect, useState, useContext} from "react";
-import {EthereumContext} from "../../data/ethereumProvider";
+import {contractInstances, EthereumContext} from "../../data/ethereumProvider";
+import FormCreate from "/src/components/formCreate";
+import ConfirmCreate from "/src/components/confirmCreate";
+
 
 export default function Index() {
-
   const ethereumContext = useContext(EthereumContext);
-  console.log(ethereumContext.metaEvidenceContents?.map((item, index) => index))
+  const [createFlowProgress, setCreateFlowProgress] = useState(0)
+  console.log(ethereumContext)
+
+
+  function handleSave() {
+    console.log('saved')
+    setCreateFlowProgress(1)
+  }
+
+  function handleCreate() {
+    console.log('created')
+  }
+
+  function handleGoBack() {
+    setCreateFlowProgress(0)
+  }
+
+
   return (
     <section>
       <h1>Create</h1>
-      <input className="displayBlock" type="text" id="title" name="title" required minLength="4" maxLength="36" size="40"
-             placeholder='A Flashy Title'/>
-      <textarea className="displayBlock" id="description" name="description" rows="5" cols="33" placeholder="A juicy description..."/>
-
-      <div>
-        <label htmlFor="bounty">Bounty Amount in ETH:</label>
-
-        <input type="number" id="bounty" name="bounty" min="0.001" max="100.000" step="0.001" placeholder='1.000'/>
-      </div>
-
-      <div>
-
-        <label htmlFor="selectCategory">Choose a category:</label>
-
-        <select id="selectCategory">
-          <option value="">--Please choose an option--</option>
-          {ethereumContext.metaEvidenceContents?.map((item, index) => <option key={index} value={item.category}>{item.category}</option>)}
-        </select>
-
-        <div>
-          <button type="button">
-            Save
-          </button>
-        </div>
-      </div>
+      {createFlowProgress === 0 && <FormCreate handleSave={handleSave}/>}
+      {createFlowProgress === 1 &&
+        <ConfirmCreate title='a title' description='a description' bounty={0.123} category={1} handleCreate={handleCreate}
+                       handleGoBack={handleGoBack}/>}
 
     </section>
 

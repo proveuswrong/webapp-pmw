@@ -11,6 +11,7 @@ export default class EthereumProvider extends Component {
       chainId: "",
       isConnected: false,
       isProviderDetected: false,
+      isDeployedOnThisChain: false,
       metaEvidenceContents: [],
       blockNumber: 0,
     }
@@ -58,7 +59,8 @@ export default class EthereumProvider extends Component {
 
   handleChainChanged(chainId) {
     console.log("Chain changed.");
-    this.setState({chainId: chainId});
+
+    this.setState({chainId: chainId, isDeployedOnThisChain: !(contractInstances[chainId] == null)});
     this.fetchMetaEvidenceContents(chainId)
 
   }
