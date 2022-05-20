@@ -27,7 +27,7 @@ export default function Header() {
         >
           Browse
         </NavLink>{" "}
-        |{" "}
+        {" "}
         <NavLink
           style={({isActive}) => ({
             color: isActive ? "red" : ""

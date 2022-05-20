@@ -2,9 +2,10 @@ import styles from "./index.module.scss"
 import {useEffect, useState, useContext} from "react";
 import {EthereumContext} from "../../data/ethereumProvider";
 
-export default function ConfirmCreate({title, description, bounty, category, handleCreate, handleGoBack}) {
+export default function ConfirmCreate({title, description, bounty, categoryNo, handleCreate, handleGoBack}) {
 
   const ethereumContext = useContext(EthereumContext);
+
 
   return (
     <>
@@ -21,7 +22,8 @@ export default function ConfirmCreate({title, description, bounty, category, han
 
       <div>
 
-        <label htmlFor="selectCategory">Chosen category: {ethereumContext.metaEvidenceContents?.[category]?.category}</label>
+        <label htmlFor="selectCategory">Chosen
+          category: {categoryNo}: {ethereumContext.metaEvidenceContents?.[categoryNo]?.category}</label>
 
 
         <div>

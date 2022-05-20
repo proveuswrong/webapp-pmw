@@ -24,7 +24,8 @@ export default function FormCreate({handleSave}) {
 
         <select id="selectCategory">
           <option value="">--Please choose an option--</option>
-          {ethereumContext.metaEvidenceContents?.map((item, index) => <option key={index} value={item.category}>{item.category}</option>)}
+          {ethereumContext.metaEvidenceContents?.map((item, index) => <option key={index}
+                                                                              value={item.category}>{index}: {item.category}</option>)}
         </select>
 
         <div>
