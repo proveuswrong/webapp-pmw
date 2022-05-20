@@ -1,5 +1,6 @@
 import {useSearchParams, Link} from "react-router-dom";
-import {EthereumContext, getAllClaims, ipfsGateway} from "../../data/ethereumProvider";
+import {EthereumContext, getAllClaims} from "../../data/ethereumProvider";
+import {ipfsGateway} from "../../utils/addToIPFS";
 import React, {useState, useEffect, useContext} from "react";
 
 
@@ -65,7 +66,7 @@ export default function ListClaims() {
 
   return (
     <>
-      
+
       <ul>
         {claims && Object.entries(claims.filter(c => c != null)).map(([key, value]) => <li key={key}><Link
           to={`${ethereumContext.chainId}/${value?.contractAddress}/${value?.id}`}>{claimContents?.[value?.claimID]?.title || (!loadingFetchingContents && `Unable to fetch claim data from ${value?.claimID}`)}</Link>

@@ -2,30 +2,41 @@ import styles from "./index.module.scss"
 import {useEffect, useState, useContext} from "react";
 import {EthereumContext} from "../../data/ethereumProvider";
 
-export default function FormCreate({handleSave}) {
+export default function FormCreate({handleSave, controlsState, updateControlsState}) {
 
   const ethereumContext = useContext(EthereumContext);
+  console.log(controlsState)
+
+  function handleControlChange(e) {
+    updateControlsState((prevState) => ({
+      ...prevState,
+      [e.target.id]: e.target.value,
+    }));
+  };
+
 
   return (
     <>
       <input className="displayBlock" type="text" id="title" name="title" required minLength="4" maxLength="36" size="40"
-             placeholder='A Flashy Title'/>
-      <textarea className="displayBlock" id="description" name="description" rows="5" cols="33" placeholder="A juicy description..."/>
+             placeholder='A Flashy Title' onChange={handleControlChange} value={controlsState.title}/>
+      <textarea className="displayBlock" id="description" name="description" rows="5" cols="33" placeholder="A juicy description..."
+                onChange={handleControlChange} value={controlsState.description}/>
 
       <div>
         <label htmlFor="bounty">Bounty Amount in ETH:</label>
 
-        <input type="number" id="bounty" name="bounty" min="0.001" max="100.000" step="0.001" placeholder='1.000'/>
+        <input type="number" id="bounty" name="bounty" min="0.001" max="100.000" step="0.001" placeholder='1.000'
+               onChange={handleControlChange} value={controlsState.bounty}/>
       </div>
 
       <div>
-
         <label htmlFor="selectCategory">Choose a category:</label>
 
-        <select id="selectCategory">
-          <option value="">--Please choose an option--</option>
+        <select id="categoryNo" onChange={handleControlChange} value={controlsState.categoryNo}>
+          <option>--Please choose a category--</option>
           {ethereumContext.metaEvidenceContents?.map((item, index) => <option key={index}
-                                                                              value={item.category}>{index}: {item.category}</option>)}
+                                                                              value={index}
+                                                                              label={`${index}: ${item.category}`}/>)}
         </select>
 
         <div>

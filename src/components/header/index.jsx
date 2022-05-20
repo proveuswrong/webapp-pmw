@@ -23,7 +23,7 @@ export default function Header() {
           style={({isActive}) => ({
             color: isActive ? "red" : ""
           })}
-          to="/browse"
+          to="browse/"
         >
           Browse
         </NavLink>{" "}
@@ -32,7 +32,7 @@ export default function Header() {
           style={({isActive}) => ({
             color: isActive ? "red" : ""
           })}
-          to="/create"
+          to="create/"
         >
           Create
         </NavLink>

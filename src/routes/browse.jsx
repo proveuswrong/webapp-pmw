@@ -11,7 +11,7 @@ export default function Browse() {
   return (
     <section>
       <h1>Browse</h1>
-      <small>Component rendered at: {ethereumContext.blockNumber}</small>
+      <small>Component rendered at block no: {ethereumContext.blockNumber}</small>
       <ListClaims/>
 
     </section>

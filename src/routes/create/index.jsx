@@ -3,13 +3,16 @@ import {useEffect, useState, useContext} from "react";
 import {contractInstances, sendTransaction, EthereumContext} from "../../data/ethereumProvider";
 import FormCreate from "/src/components/formCreate";
 import ConfirmCreate from "/src/components/confirmCreate";
-import {ethers} from "ethers";
+import addToIPFS from "../../utils/addToIPFS";
+import {utils} from "ethers";
 
 
 export default function Index() {
   const ethereumContext = useContext(EthereumContext);
   const [createFlowProgress, setCreateFlowProgress] = useState(0)
+  const [controlsState, setControlsState] = useState({title: '', description: '', bounty: 0.001, categoryNo: -1})
 
+  console.log(controlsState)
 
   function handleSave() {
     console.log('saved')
@@ -17,8 +20,22 @@ export default function Index() {
   }
 
   async function handleCreate() {
-    console.log(ethereumContext.contractInstance)
-    const unsignedTx = await ethereumContext.contractInstance.populateTransaction.initializeClaim('invalidIpfsPath', 0, 0, {value: 123000000000})
+
+    let ipfsPathOfNewClaim
+    try {
+      const ipfsEndpointResponse = await addToIPFS('https://ipfs.kleros.io/add', "claim.json", JSON.stringify({
+        title: controlsState.title,
+        description: controlsState.description
+      }))
+
+      ipfsPathOfNewClaim = ipfsEndpointResponse[0].hash
+    } catch (err) {
+      console.error(err)
+    }
+
+    const formattedBounty = utils.parseEther(controlsState.bounty)
+
+    const unsignedTx = await ethereumContext.contractInstance.populateTransaction.initializeClaim(`/ipfs/${ipfsPathOfNewClaim}`, controlsState.categoryNo, 0, {value: formattedBounty})
 
     ethereumContext.ethersProvider.getSigner().sendTransaction(unsignedTx).then(console.log)
   }
@@ -32,10 +49,12 @@ export default function Index() {
     <section>
 
       <h1>Create</h1>
-      <small style={{marginBottom: '32px', display: 'block'}}>Component rendered at: {ethereumContext.blockNumber}</small>
-      {createFlowProgress === 0 && <FormCreate handleSave={handleSave}/>}
+      <small style={{marginBottom: '32px', display: 'block'}}>Component rendered at block no: {ethereumContext.blockNumber}</small>
+      {createFlowProgress === 0 &&
+        <FormCreate handleSave={handleSave} controlsState={controlsState} updateControlsState={setControlsState}/>}
       {createFlowProgress === 1 &&
-        <ConfirmCreate title='a title' description='a description' bounty={0.123} categoryNo={1} handleCreate={handleCreate}
+        <ConfirmCreate title={controlsState.title} description={controlsState.description} bounty={controlsState.bounty}
+                       categoryNo={controlsState.categoryNo} handleCreate={handleCreate}
                        handleGoBack={handleGoBack}/>}
 
     </section>

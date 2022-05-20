@@ -1,7 +1,10 @@
 import {useParams, useNavigate, useLocation} from "react-router-dom";
 import Interval from "react-interval-rerender";
-import {EthereumContext, getClaimByID, ipfsGateway, BigNumber, constants, utils} from "../data/ethereumProvider";
+import {EthereumContext, getClaimByID} from "../data/ethereumProvider";
+import {ipfsGateway} from "../utils/addToIPFS";
 import {useEffect, useState, useContext} from "react";
+
+import {utils, constants, BigNumber} from 'ethers'
 
 
 export default function Claim() {
@@ -60,7 +63,7 @@ export default function Claim() {
       <div>
 
         <h3>{!fetchingClaimContent && !claimContent && '⚠️'} {claimContent?.title || (fetchingClaimContent ? 'fetching...' : 'Failed to fetch claim title.')} {!fetchingClaimContent && !claimContent && '⚠️'}  </h3>
-        <p>Category: {ethereumContext?.metaEvidenceContents[claim?.category]?.category}</p>
+        <p>Category: {claim?.category}: {ethereumContext?.metaEvidenceContents[claim?.category]?.category}</p>
         {/*We need to get arbitrator address somehow. Last thing I tried is to add this field to Claim Entity on Subgraph. See 0.0.19*/}
         {/*<p>Arbitrator Short Name: {claim.category.arbitrator.shortName}</p>*/}
         {/*<p>Arbitrator Long Name: {claim.category.arbitrator.fullName}</p>*/}

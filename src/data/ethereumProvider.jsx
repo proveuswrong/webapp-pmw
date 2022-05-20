@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
+import {ipfsGateway} from "../utils/addToIPFS";
 import {ethers} from "ethers";
 
 
@@ -572,8 +573,5 @@ export const getAllMetaEvidences = (chainID) => {
 }
 
 
-export const ipfsGateway = 'https://ipfs.kleros.io'
 
-export const BigNumber = ethers.BigNumber
-export const constants = ethers.constants
-export const utils = ethers.utils
+
