@@ -1,3 +1,19 @@
 .displayBlock {
   display: block;
 }
+
+@keyframes blinker {
+  0% {
+    opacity: 0;
+  }
+
+  60% {
+    opacity: 100%;
+  }
+
+}
+
+
+.blink {
+  animation: blinker 2s running forwards;
+}

@@ -10,8 +10,8 @@ export default function Browse() {
 
   return (
     <section>
-      <h1>Browse</h1>
       <small>Component rendered at block no: {ethereumContext.blockNumber}</small>
+      <h1>Browse</h1>
       <ListClaims/>
 
     </section>

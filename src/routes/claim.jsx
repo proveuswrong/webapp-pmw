@@ -1,11 +1,11 @@
 import {useParams, useNavigate, useLocation} from "react-router-dom";
 import Interval from "react-interval-rerender";
-import {EthereumContext, getClaimByID} from "../data/ethereumProvider";
+import {EthereumContext, getAllClaims, getClaimByID} from "../data/ethereumProvider";
 import {ipfsGateway} from "../utils/addToIPFS";
 import {useEffect, useState, useContext} from "react";
 
 import {utils, constants, BigNumber} from 'ethers'
-
+import shortid from "shortid";
 
 export default function Claim() {
   const params = useParams();
@@ -18,6 +18,7 @@ export default function Claim() {
   const [fetchingClaim, setFetchingClaim] = useState(true)
   const [fetchingClaimContent, setFetchingClaimContent] = useState(true)
 
+  console.log(claim)
 
   useEffect(() => {
     let didCancel = false;
@@ -56,10 +57,16 @@ export default function Claim() {
 
   }, [claim])
 
+  function handleInitiateWithdrawal() {
+    console.log('withdrawal initiated.')
+  }
+
   let reRenderInMs = 1000;
 
   return (
     <section>
+      <small key={ethereumContext.blockNumber}>Component rendered at block no: <span className='blink'>{ethereumContext.blockNumber}</span></small>
+
       <div>
 
         <h3>{!fetchingClaimContent && !claimContent && '⚠️'} {claimContent?.title || (fetchingClaimContent ? 'fetching...' : 'Failed to fetch claim title.')} {!fetchingClaimContent && !claimContent && '⚠️'}  </h3>
@@ -79,7 +86,13 @@ export default function Claim() {
           Amount: {fetchingClaim ? 'fetching' : `${parseFloat(utils.formatUnits(parseInt(claim?.bounty), 18)).toFixed(3)} ${constants.EtherSymbol}`}
         </p>
         <p>
-          Claim Age: {fetchingClaim ? 'fetching' : `${getTimePastSinceLastBountyUpdate(claim, ethereumContext.blockNumber)} blocks`}
+          Claim Age:
+          {fetchingClaim ? 'fetching' :
+            <span key={getTimePastSinceLastBountyUpdate(claim, ethereumContext.blockNumber)}
+                  className='blink'> {getTimePastSinceLastBountyUpdate(claim, ethereumContext.blockNumber)}</span>} blocks
+        </p>
+        <p>
+          Claim Owner: {fetchingClaim ? 'fetching' : claim.owner}
         </p>
         {claim &&
           <p>
@@ -106,6 +119,13 @@ export default function Claim() {
           >
             Go back
           </button>
+          {ethereumContext.accounts[0] == claim?.owner &&
+            <button
+              onClick={handleInitiateWithdrawal}
+            >
+              Initiate Withdrawal
+            </button>
+          }
         </p>
       </div>
     </section>

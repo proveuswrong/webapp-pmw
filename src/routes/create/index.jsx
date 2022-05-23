@@ -47,9 +47,10 @@ export default function Index() {
 
   return (
     <section>
+      <small className='blink' style={{marginBottom: '32px', display: 'block'}}>Component rendered at block
+        no: {ethereumContext.blockNumber}</small>
 
       <h1>Create</h1>
-      <small style={{marginBottom: '32px', display: 'block'}}>Component rendered at block no: {ethereumContext.blockNumber}</small>
       {createFlowProgress === 0 &&
         <FormCreate handleSave={handleSave} controlsState={controlsState} updateControlsState={setControlsState}/>}
       {createFlowProgress === 1 &&
