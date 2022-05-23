@@ -5,7 +5,6 @@ import {ipfsGateway} from "../utils/addToIPFS";
 import {useEffect, useState, useContext} from "react";
 
 import {utils, constants, BigNumber} from 'ethers'
-import shortid from "shortid";
 
 export default function Claim() {
   const params = useParams();
@@ -20,7 +19,9 @@ export default function Claim() {
 
   console.log(claim)
 
+
   useEffect(() => {
+    console.log(params)
     let didCancel = false;
 
     if (!didCancel) {
@@ -34,7 +35,9 @@ export default function Claim() {
       didCancel = true
     }
 
-  }, [])
+
+  }, [ethereumContext.blockNumber])
+
 
   useEffect(() => {
     let didCancel = false;
@@ -57,20 +60,36 @@ export default function Claim() {
 
   }, [claim])
 
-  function handleInitiateWithdrawal() {
+  async function handleInitiateWithdrawal() {
     console.log('withdrawal initiated.')
+    const unsignedTx = await ethereumContext.contractInstance.populateTransaction.initiateWithdrawal(claim.storageAddress)
+    ethereumContext.ethersProvider.getSigner().sendTransaction(unsignedTx).then(console.log)
+  }
+
+  async function handleExecuteWithdrawal() {
+    const unsignedTx = await ethereumContext.contractInstance.populateTransaction.withdraw(claim.storageAddress)
+    ethereumContext.ethersProvider.getSigner().sendTransaction(unsignedTx).then(console.log)
+  }
+
+  async function handleRevamp() {
+    const unsignedTx = await ethereumContext.contractInstance.populateTransaction.initializeClaim(claim.claimID, claim.category, claim.storageAddress, {value: "12312312311111"})
+    ethereumContext.ethersProvider.getSigner().sendTransaction(unsignedTx).then(console.log)
   }
 
   let reRenderInMs = 1000;
 
+
+  console.log(claim && getWithdrawalCountdown(claim))
+
   return (
     <section>
-      <small key={ethereumContext.blockNumber}>Component rendered at block no: <span className='blink'>{ethereumContext.blockNumber}</span></small>
 
       <div>
 
         <h3>{!fetchingClaimContent && !claimContent && '⚠️'} {claimContent?.title || (fetchingClaimContent ? 'fetching...' : 'Failed to fetch claim title.')} {!fetchingClaimContent && !claimContent && '⚠️'}  </h3>
         <p>Category: {claim?.category}: {ethereumContext?.metaEvidenceContents[claim?.category]?.category}</p>
+        <p>Status: <span key={claim?.status} className='blink'>{claim?.status}</span></p>
+
         {/*We need to get arbitrator address somehow. Last thing I tried is to add this field to Claim Entity on Subgraph. See 0.0.19*/}
         {/*<p>Arbitrator Short Name: {claim.category.arbitrator.shortName}</p>*/}
         {/*<p>Arbitrator Long Name: {claim.category.arbitrator.fullName}</p>*/}
@@ -86,13 +105,13 @@ export default function Claim() {
           Amount: {fetchingClaim ? 'fetching' : `${parseFloat(utils.formatUnits(parseInt(claim?.bounty), 18)).toFixed(3)} ${constants.EtherSymbol}`}
         </p>
         <p>
-          Claim Age:
+          Last status change:
           {fetchingClaim ? 'fetching' :
             <span key={getTimePastSinceLastBountyUpdate(claim, ethereumContext.blockNumber)}
-                  className='blink'> {getTimePastSinceLastBountyUpdate(claim, ethereumContext.blockNumber)}</span>} blocks
+                  className='blink'> {getTimePastSinceLastBountyUpdate(claim, ethereumContext.blockNumber)}</span>} blocks ago
         </p>
         <p>
-          Claim Owner: {fetchingClaim ? 'fetching' : claim.owner}
+          Claim Owner: {fetchingClaim ? 'fetching' : claim?.owner}
         </p>
         {claim &&
           <p>
@@ -119,22 +138,42 @@ export default function Claim() {
           >
             Go back
           </button>
-          {ethereumContext.accounts[0] == claim?.owner &&
+          {ethereumContext.accounts[0] == claim?.owner && claim?.status == 'Live' &&
             <button
               onClick={handleInitiateWithdrawal}
             >
               Initiate Withdrawal
             </button>
           }
+          {ethereumContext.accounts[0] == claim?.owner && claim?.status == 'TimelockStarted' &&
+            <button
+              onClick={handleExecuteWithdrawal}
+            >
+              {getWithdrawalCountdown(claim) > 0 ? (
+                <span>You can execute withdrawal in
+                <Interval
+                  delay={reRenderInMs}>{() => getWithdrawalCountdown(claim)}</Interval> seconds</span>) : 'Execute Withdrawal'}
+            </button>
+          }
+          {claim?.status == 'Withdrawn' &&
+            <button
+              onClick={handleRevamp}
+            >
+              Revamp
+            </button>
+          }
         </p>
       </div>
+      <small key={ethereumContext.blockNumber} style={{marginTop: 'auto'}}>Component rendered at block no: <span
+        className='blink'>{ethereumContext.blockNumber}</span></small>
     </section>
   );
 }
 
 export const getTimePastSinceLastBountyUpdate = (claim, currentBlockNumber) =>
-  parseInt(currentBlockNumber) - parseInt(claim.lastBalanceUpdate)
+  parseInt(currentBlockNumber) - parseInt(claim?.lastBalanceUpdate)
 
+export const getWithdrawalCountdown = (claim) => Math.max(parseInt(claim.withdrawalPermittedAt) - parseInt(Date.now() / 1000), 0)
 
 export const getTrustScore = (claim, timePastSinceLastBountyUpdate) => {
   const timeDelta = BigNumber.from(timePastSinceLastBountyUpdate)

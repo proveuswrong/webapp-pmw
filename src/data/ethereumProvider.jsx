@@ -151,8 +151,16 @@ export const getClaimByID = (chainID, contractAddress, id) => {
     disputeID
     withdrawalPermittedAt
     lastCalculatedScore
-  }}`).then(data => {
-
+  }
+    claimStorages(where: {claimEntityID: "${id}"}) {
+    id
+    claimEntityID
+  }
+  }`).then(data => {
+    console.log(data)
+    if (data && data?.claims[0]) {
+      data.claims[0].storageAddress = data?.claimStorages[0]?.id
+    }
     return data.claims[0]
   }).catch(err => console.error)
 }
@@ -171,6 +179,8 @@ export const getAllClaims = (chainID) => {
     disputeID
     withdrawalPermittedAt
     lastCalculatedScore
+    arbitrator
+    arbitratorExtraData
   }}`).then(data => {
 
       if (data && data.claims && data.claims.length > 0) {

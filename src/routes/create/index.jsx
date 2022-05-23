@@ -12,7 +12,6 @@ export default function Index() {
   const [createFlowProgress, setCreateFlowProgress] = useState(0)
   const [controlsState, setControlsState] = useState({title: '', description: '', bounty: 0.001, categoryNo: -1})
 
-  console.log(controlsState)
 
   function handleSave() {
     console.log('saved')
@@ -47,9 +46,6 @@ export default function Index() {
 
   return (
     <section>
-      <small className='blink' style={{marginBottom: '32px', display: 'block'}}>Component rendered at block
-        no: {ethereumContext.blockNumber}</small>
-
       <h1>Create</h1>
       {createFlowProgress === 0 &&
         <FormCreate handleSave={handleSave} controlsState={controlsState} updateControlsState={setControlsState}/>}
@@ -57,7 +53,8 @@ export default function Index() {
         <ConfirmCreate title={controlsState.title} description={controlsState.description} bounty={controlsState.bounty}
                        categoryNo={controlsState.categoryNo} handleCreate={handleCreate}
                        handleGoBack={handleGoBack}/>}
-
+      <small style={{marginTop: '32px', display: 'block'}}>Component rendered at block
+        no: <span key={ethereumContext.blockNumber} className='blink'>{ethereumContext.blockNumber}</span></small>
     </section>
 
   );

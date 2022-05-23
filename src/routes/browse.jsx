@@ -10,10 +10,10 @@ export default function Browse() {
 
   return (
     <section>
-      <small>Component rendered at block no: {ethereumContext.blockNumber}</small>
       <h1>Browse</h1>
       <ListClaims/>
-
+      <small style={{marginTop: '32px', display: 'block'}}>Component rendered at block no: <span
+        key={ethereumContext.blockNumber} className="blink">{ethereumContext.blockNumber}</span></small>
     </section>
   );
 }
