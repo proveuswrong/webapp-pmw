@@ -23,7 +23,7 @@ export default function ConfirmCreate({title, description, bounty, categoryNo, h
       <div>
 
         <label htmlFor="selectCategory">Chosen
-          category: {categoryNo}: {ethereumContext.metaEvidenceContents?.[categoryNo]?.category}</label>
+          arbitration setting: {categoryNo}: {ethereumContext.metaEvidenceContents?.[categoryNo]?.category}</label>
 
 
         <div>

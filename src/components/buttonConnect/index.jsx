@@ -15,7 +15,9 @@ export default function ButtonConnect({className}) {
               value.accounts.length < 1 ? connect() : console.log("There is a connected account already.");
             }}
           >
+            <span key={value.accounts[0]} className='blink'>
             {value.accounts[0] || (awaitingUserPermission ? 'Awaiting User Permission' : "Click to Connect Your Account")}
+              </span>
           </button>
         </div>
       )}

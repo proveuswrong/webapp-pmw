@@ -30,10 +30,8 @@ export default function FormCreate({handleSave, controlsState, updateControlsSta
       </div>
 
       <div>
-        <label htmlFor="selectCategory">Choose a category:</label>
-
         <select id="categoryNo" onChange={handleControlChange} value={controlsState.categoryNo}>
-          <option>--Please choose a category--</option>
+          <option>--Please choose an arbitration setting--</option>
           {ethereumContext.metaEvidenceContents?.map((item, index) => <option key={index}
                                                                               value={index}
                                                                               label={`${index}: ${item.category}`}/>)}

@@ -21,7 +21,6 @@ export default function Claim() {
 
 
   useEffect(() => {
-    console.log(params)
     let didCancel = false;
 
     if (!didCancel) {
@@ -61,8 +60,19 @@ export default function Claim() {
   }, [claim])
 
   async function handleInitiateWithdrawal() {
-    console.log('withdrawal initiated.')
     const unsignedTx = await ethereumContext.contractInstance.populateTransaction.initiateWithdrawal(claim.storageAddress)
+    ethereumContext.ethersProvider.getSigner().sendTransaction(unsignedTx).then(console.log)
+  }
+
+  async function handleIncreaseBounty() {
+    const unsignedTx = await ethereumContext.contractInstance.populateTransaction.increaseBounty(claim.storageAddress, {value: constants.Two.mul(claim.bounty)})
+    ethereumContext.ethersProvider.getSigner().sendTransaction(unsignedTx).then(console.log)
+  }
+
+  async function handleChallenge() {
+    const fee = await ethereumContext.contractInstance.challengeFee(claim.storageAddress);
+
+    const unsignedTx = await ethereumContext.contractInstance.populateTransaction.challenge(claim.storageAddress, {value: fee})
     ethereumContext.ethersProvider.getSigner().sendTransaction(unsignedTx).then(console.log)
   }
 
@@ -89,7 +99,11 @@ export default function Claim() {
         <h3>{!fetchingClaimContent && !claimContent && '⚠️'} {claimContent?.title || (fetchingClaimContent ? 'fetching...' : 'Failed to fetch claim title.')} {!fetchingClaimContent && !claimContent && '⚠️'}  </h3>
         <p>Category: {claim?.category}: {ethereumContext?.metaEvidenceContents[claim?.category]?.category}</p>
         <p>Status: <span key={claim?.status} className='blink'>{claim?.status}</span></p>
-
+        {claim?.disputeID &&
+          <p>Dispute <a href={`https://resolve.kleros.io/cases/${claim.disputeID}`} target='_blank' rel='noopener noreferrer'>ID</a>: <span
+            key={claim?.disputeID}
+            className='blink'>{claim?.disputeID}</span>
+          </p>}
         {/*We need to get arbitrator address somehow. Last thing I tried is to add this field to Claim Entity on Subgraph. See 0.0.19*/}
         {/*<p>Arbitrator Short Name: {claim.category.arbitrator.shortName}</p>*/}
         {/*<p>Arbitrator Long Name: {claim.category.arbitrator.fullName}</p>*/}
@@ -101,15 +115,12 @@ export default function Claim() {
         {/*<p>Jury Size: {claim.category.jurySize} votes</p>*/}
         <p> {claimContent?.description || (fetchingClaimContent ? 'fetching...' : 'Failed to fetch claim description.')}</p>
         <p>
-          Bounty
-          Amount: {fetchingClaim ? 'fetching' : `${parseFloat(utils.formatUnits(parseInt(claim?.bounty), 18)).toFixed(3)} ${constants.EtherSymbol}`}
-        </p>
-        <p>
-          Last status change:
-          {fetchingClaim ? 'fetching' :
-            <span key={getTimePastSinceLastBountyUpdate(claim, ethereumContext.blockNumber)}
-                  className='blink'> {getTimePastSinceLastBountyUpdate(claim, ethereumContext.blockNumber)}</span>} blocks ago
-        </p>
+          Bounty amount
+          is {fetchingClaim ? 'fetching' : `${parseFloat(utils.formatUnits(parseInt(claim?.bounty), 18)).toFixed(3)} ${constants.EtherSymbol}`} and
+          it was updated {fetchingClaim ? 'fetching' :
+          <span key={getTimePastSinceLastBountyUpdate(claim, ethereumContext.blockNumber)}
+                className='blink'> {getTimePastSinceLastBountyUpdate(claim, ethereumContext.blockNumber)}</span>} blocks ago</p>
+
         <p>
           Claim Owner: {fetchingClaim ? 'fetching' : claim?.owner}
         </p>
@@ -145,6 +156,20 @@ export default function Claim() {
               Initiate Withdrawal
             </button>
           }
+          {ethereumContext.accounts[0] == claim?.owner && claim?.status == 'Live' &&
+            <button
+              onClick={handleIncreaseBounty}
+            >
+              Double Bounty
+            </button>
+          }
+          {ethereumContext.accounts[1] != claim?.owner && claim?.status == 'Live' &&
+            <button
+              onClick={handleChallenge}
+            >
+              Prove it Wrong
+            </button>
+          }
           {ethereumContext.accounts[0] == claim?.owner && claim?.status == 'TimelockStarted' &&
             <button
               onClick={handleExecuteWithdrawal}
@@ -162,6 +187,8 @@ export default function Claim() {
               Revamp
             </button>
           }
+
+
         </p>
       </div>
       <small key={ethereumContext.blockNumber} style={{marginTop: 'auto'}}>Component rendered at block no: <span

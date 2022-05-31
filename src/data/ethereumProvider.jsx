@@ -151,6 +151,8 @@ export const getClaimByID = (chainID, contractAddress, id) => {
     disputeID
     withdrawalPermittedAt
     lastCalculatedScore
+    arbitrator
+    arbitratorExtraData
   }
     claimStorages(where: {claimEntityID: "${id}"}) {
     id
