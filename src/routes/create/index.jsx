@@ -32,7 +32,9 @@ export default function Index() {
       console.error(err)
     }
 
-    const formattedBounty = utils.parseEther(controlsState.bounty)
+
+    const formattedBounty = utils.parseEther(controlsState.bounty.toString())
+
 
     const unsignedTx = await ethereumContext.contractInstance.populateTransaction.initializeClaim(`/ipfs/${ipfsPathOfNewClaim}`, controlsState.categoryNo, 0, {value: formattedBounty})
 

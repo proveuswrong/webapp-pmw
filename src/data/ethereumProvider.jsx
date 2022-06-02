@@ -116,8 +116,8 @@ export const EthereumContext = React.createContext();
 export const chains = {"0x1": {name: "Ethereum Mainnet"}, "0x4": {name: "Ethereum Testnet Rinkeby"}};
 export const contractInstances = {
   '0x4': {
-    "0x5678057C9a36697986A1003d49B73EBE6A0E9c03": {
-      subgraphEndpoint: 'https://api.studio.thegraph.com/query/16016/pmw/0.0.24',
+    "0xA3942B029edB8Afb7229c225BE650e7972A8370c": {
+      subgraphEndpoint: 'https://api.studio.thegraph.com/query/16016/pmw/0.2.0'
     }
   }
 }
