@@ -14,7 +14,7 @@ export default function ButtonSelectNetwork({className}) {
           </button>
         </div>
       )}
-      {/* prints: Reed */}
+    
     </EthereumContext.Consumer>
   );
 }
