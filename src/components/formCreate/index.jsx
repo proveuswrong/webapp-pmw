@@ -1,11 +1,9 @@
-import styles from "./index.module.scss"
 import {useEffect, useState, useContext} from "react";
 import {EthereumContext} from "../../data/ethereumProvider";
 
 export default function FormCreate({handleSave, controlsState, updateControlsState}) {
 
   const ethereumContext = useContext(EthereumContext);
-  console.log(controlsState)
 
   function handleControlChange(e) {
     updateControlsState((prevState) => ({
@@ -17,7 +15,7 @@ export default function FormCreate({handleSave, controlsState, updateControlsSta
 
   return (
     <>
-      <input className="displayBlock" type="text" id="title" name="title" required minLength="4" maxLength="36" size="40"
+      <input className="displayBlock" type="text" id="title" name="title" required minLength="4" maxLength="100" size="50"
              placeholder='A Flashy Title' onChange={handleControlChange} value={controlsState.title}/>
       <textarea className="displayBlock" id="description" name="description" rows="5" cols="33" placeholder="A juicy description..."
                 onChange={handleControlChange} value={controlsState.description}/>

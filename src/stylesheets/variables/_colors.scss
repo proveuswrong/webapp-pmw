@@ -1,0 +1,25 @@
+$colorStatus: (
+        live: #0B7D0F,
+        withdrawn: #344289,
+        debunked: #B62121,
+        challenged: #A34807,
+);
+
+$colorText: (
+        primary: #231B1B,
+        secondary: #F3ECC9,
+        ternary: #5C4D4D,
+);
+
+
+$colorBackground: (
+        background: #F3ECC9,
+        separator: #6E6673,
+);
+
+$colorButton: (primary:(fill:"#231b1b", stroke:"#1d1515", text:"F3ECC9"),
+        hover:(fill:"#2D1E1E", stroke:"#271B1B", text:"F3ECC9"),
+        pressed:(fill:"#300A04", stroke:"#300A04", text:"F3ECC9"),
+        secondary:(fill:transparent, stroke:"#1D1515", text:"231B1B"),
+        disable:(fill:"#909090", stroke:"#898489", text:"5C4D4D"));
+

@@ -1,6 +1,6 @@
 import styles from "./index.module.scss"
-import {useEffect, useState, useContext} from "react";
-import {contractInstances, sendTransaction, EthereumContext} from "../../data/ethereumProvider";
+import {useState, useContext} from "react";
+import {EthereumContext} from "../../data/ethereumProvider";
 import FormCreate from "/src/components/formCreate";
 import ConfirmCreate from "/src/components/confirmCreate";
 import addToIPFS from "../../utils/addToIPFS";
@@ -14,7 +14,6 @@ export default function Index() {
 
 
   function handleSave() {
-    console.log('saved')
     setCreateFlowProgress(1)
   }
 

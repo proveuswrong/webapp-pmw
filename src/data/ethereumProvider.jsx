@@ -51,7 +51,7 @@ export default class EthereumProvider extends Component {
     // Ethers below - As I introduced Ethers now, this file needs a refactoring
 
     const provider = new ethers.providers.Web3Provider(window.ethereum)
-    provider.send("eth_requestAccounts", []).then(this.handleAccountsChanged)
+    // provider.send("eth_requestAccounts", []).then(this.handleAccountsChanged)
     this.setState({ethersProvider: provider})
   }
 
@@ -101,6 +101,7 @@ export default class EthereumProvider extends Component {
 
   async fetchMetaEvidenceContents(chainId) {
     console.log('Fetching all meta-evidences...');
+    getAllMetaEvidences(chainId).then(console.log)
     const rawMetaEvidenceList = (await getAllMetaEvidences(chainId)).map(item => item.uri)
     const result = await Promise.allSettled(rawMetaEvidenceList.map(metaEvidenceURI =>
       fetch(ipfsGateway + metaEvidenceURI).then(r => r.json())
@@ -113,11 +114,13 @@ export default class EthereumProvider extends Component {
 }
 export const EthereumContext = React.createContext();
 
-export const chains = {"0x1": {name: "Ethereum Mainnet"}, "0x4": {name: "Ethereum Testnet Rinkeby"}};
+
+// Merge these two objects
+export const chains = {"0x4": {name: "Ethereum Testnet Rinkeby", shortname: "Rinkeby"}};
 export const contractInstances = {
   '0x4': {
     "0x5678057C9a36697986A1003d49B73EBE6A0E9c03": {
-      subgraphEndpoint: 'https://api.studio.thegraph.com/query/16016/pmw/0.0.24',
+      subgraphEndpoint: 'https://api.studio.thegraph.com/query/16016/pmw/0.3.0',
     }
   }
 }

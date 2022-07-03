@@ -1,4 +1,3 @@
-import styles from "./index.module.scss"
 import {useEffect, useState, useContext} from "react";
 import {EthereumContext} from "../../data/ethereumProvider";
 

@@ -1,44 +1,45 @@
-import { NavLink } from "react-router-dom";
+import {NavLink} from "react-router-dom";
 import ButtonConnect from "/src/components/buttonConnect";
 import ButtonSelectNetwork from "/src/components/buttonSelectNetwork";
+import Logo from "jsx:../../assets/logo.svg";
+
 
 import * as styles from "./index.module.scss";
 
 export default function Header() {
   return (
-    <header>
-      <h1>The Trust Post</h1>{" "}
-      <nav>
+    <header className={styles.header}>
+      <Logo className={styles.logo}/>
+      <hr className={styles.hrBelowLogo}/>
+      <div className={styles.subtitle}>Product of Prove Me Wrong</div>
+      <hr/>
+      <nav className={styles.nav}>
         <h2 hide="">Navigation</h2>
         <NavLink
-          style={({ isActive }) => ({
-            color: isActive ? "red" : "",
-          })}
+
           to="/"
         >
           Home
         </NavLink>{" "}
         <NavLink
-          style={({ isActive }) => ({
-            color: isActive ? "red" : "",
-          })}
+
           to="browse/"
         >
           Browse
         </NavLink>{" "}
         <NavLink
-          style={({ isActive }) => ({
-            color: isActive ? "red" : "",
-          })}
           to="create/"
         >
           Create
         </NavLink>
+        <div className={styles.navEthereum}>
+          <ButtonConnect/>
+          <ButtonSelectNetwork/>
+        </div>
       </nav>
-      <div className={styles.connection}>
-        <ButtonConnect />
-        <ButtonSelectNetwork />
-      </div>
+
+      <hr/>
+
     </header>
   );
 }
