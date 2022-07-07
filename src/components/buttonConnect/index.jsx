@@ -9,7 +9,7 @@ export default function ButtonConnect() {
     <EthereumContext.Consumer>
       {(value) => (
         <CustomButton
-          modifiers='small secondary'
+          modifiers="small secondary"
           id="buttonConnect"
           disabled={awaitingUserPermission}
           onClick={() => {

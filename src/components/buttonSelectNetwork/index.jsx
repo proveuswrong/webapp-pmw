@@ -33,9 +33,9 @@ export default function ButtonSelectNetwork() {
   return (
     <EthereumContext.Consumer>
       {(value) => (
-        <CustomDropdown modifiers='small secondary' overlay={menu}>
+        <CustomDropdown modifiers="small secondary" overlay={menu}>
           <Button
-            id="buttonSelectNetwork" disabled={false}>
+            id="buttonSelectNetwork" >
             <span key={value.chainId} className='blink'>{chains[value.chainId]?.shortname || "Unsupported Network"}</span>
             <DownOutlined/>
           </Button>
