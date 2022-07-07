@@ -9,9 +9,9 @@ export default function ButtonConnect() {
     <EthereumContext.Consumer>
       {(value) => (
         <CustomButton
-          modifiers='small'
+          modifiers='small secondary'
           id="buttonConnect"
-          disabled={true}
+          disabled={awaitingUserPermission}
           onClick={() => {
             value.accounts.length < 1 ? connect() : console.log("There is a connected account already.");
           }}
