@@ -1,8 +1,9 @@
 import React from "react";
 import {EthereumContext, chains} from "../../data/ethereumProvider";
 import {DownOutlined, UserOutlined} from '@ant-design/icons';
-import {Dropdown, Menu, message, Space, Tooltip} from 'antd';
-import Button from "/src/components/button";
+import {Button, Dropdown, Menu, message, Space, Tooltip} from 'antd';
+import CustomButton from "/src/components/ui/button";
+import CustomDropdown from "/src/components/ui/dropdown";
 
 import {utils} from "ethers";
 
@@ -32,12 +33,13 @@ export default function ButtonSelectNetwork() {
   return (
     <EthereumContext.Consumer>
       {(value) => (
-        <Dropdown overlay={menu}>
-          <Button id="buttonSelectNetwork" disabled={false}>
+        <CustomDropdown modifiers='small' overlay={menu}>
+          <Button
+            id="buttonSelectNetwork" disabled={false}>
             <span key={value.chainId} className='blink'>{chains[value.chainId]?.shortname || "Unsupported Network"}</span>
             <DownOutlined/>
           </Button>
-        </Dropdown>
+        </CustomDropdown>
 
       )}
     </EthereumContext.Consumer>

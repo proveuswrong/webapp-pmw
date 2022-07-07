@@ -6,9 +6,10 @@
   flex-direction: row;
   align-items: center;
   font-size: typo.$s;
+  height: 3.5rem;
 
   a {
-    color: map-get(colors.$colorText, primary)
+    color: map-get(colors.$palette, secondary)
   }
 
   > a + a {
@@ -36,6 +37,15 @@
 
 .hrBelowLogo {
   width: 21rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+
+}
+
+
+.hrBelowSubtitle {
+  margin-top: 1.5rem;
+
 }
 
 

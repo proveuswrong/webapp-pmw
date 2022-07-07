@@ -1,7 +1,7 @@
 @use "src/stylesheets/variables/colors";
 
 body {
-  background-color: map-get(colors.$colorBackground, background);
+  background-color: map-get(colors.$palette, primary);
 }
 
 body::after {
@@ -17,12 +17,12 @@ body::after {
 }
 
 footer {
-  color: map-get(colors.$colorText, secondary);
-  background-color: map-get(colors.$colorText, primary);
+  color: map-get(colors.$palette, primary);
+  background-color: map-get(colors.$palette, secondary);
 
   svg {
     path, circle, rect {
-      fill: map-get(colors.$colorText, secondary);
+      fill: map-get(colors.$palette, primary);
 
     }
   }

@@ -4,5 +4,5 @@ import {Button as ButtonFromAntDesign} from "antd";
 
 export default function Button(props) {
 
-  return <ButtonFromAntDesign className={styles.button} {...props}>{props.children}</ButtonFromAntDesign>
+  return <ButtonFromAntDesign className={`${styles.button} ${props.modifiers}`} {...props}>{props.children}</ButtonFromAntDesign>
 }

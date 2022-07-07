@@ -1,25 +1,40 @@
+$palette: (
+        'primary': #f3ecc9,
+        'secondary': #231b1b,
+        'brown': (
+                'alpha': #421610,
+                'beta': #2d1e1e,
+                'charlie': #270804,
+                'delta': #271b1b,
+        ),
+        'grey': (
+                'alpha': #5c4d4d,
+                'beta': #6e6673,
+                'charlie': #aea6a5,
+                'delta': #cfcccc,
+        ),
+        'helper':(
+                'green': #0b7d0f,
+                'blue': #0b7d0f,
+                'red': #0b7d0f,
+                'orange': #0b7d0f,
+        )
+);
+
+
 $colorStatus: (
-        live: #0B7D0F,
-        withdrawn: #344289,
-        debunked: #B62121,
-        challenged: #A34807,
-);
-
-$colorText: (
-        primary: #231B1B,
-        secondary: #F3ECC9,
-        ternary: #5C4D4D,
+        live: map-get($palette, 'helper', 'green'),
+        withdrawn: map-get($palette, 'helper', 'blue'),
+        debunked: map-get($palette, 'helper', 'red'),
+        challenged: map-get($palette, 'helper', 'orange'),
 );
 
 
-$colorBackground: (
-        background: #F3ECC9,
-        separator: #6E6673,
-);
-
-$colorButton: (primary:(fill:"#231b1b", stroke:"#1d1515", text:"F3ECC9"),
-        hover:(fill:"#2D1E1E", stroke:"#271B1B", text:"F3ECC9"),
-        pressed:(fill:"#300A04", stroke:"#300A04", text:"F3ECC9"),
-        secondary:(fill:transparent, stroke:"#1D1515", text:"231B1B"),
-        disable:(fill:"#909090", stroke:"#898489", text:"5C4D4D"));
+$colorButton: (
+        primary:(fill: map-get($palette, 'brown', 'beta'), stroke:map-get($palette, 'brown', 'charlie'), text:map-get($palette, 'primary')),
+        secondary:(fill: transparent, stroke:map-get($palette, 'brown', 'beta'), text:map-get($palette, 'secondary')),
+        hover:(fill: map-get($palette, 'brown', 'alpha'), stroke:map-get($palette, 'brown', 'beta'), text:map-get($palette, 'primary')),
+        pressed:(fill: map-get($palette, 'brown', 'delta'), stroke:map-get($palette, 'brown', 'charlie'), text:map-get($palette, 'primary')),
+        disabled:(fill: map-get($palette, 'grey', 'delta'), stroke:map-get($palette, 'grey', 'charlie'), text:map-get($palette, 'grey', 'alpha'))
+)
 

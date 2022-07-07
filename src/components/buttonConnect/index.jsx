@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {EthereumContext} from "../../data/ethereumProvider";
-import Button from "/src/components/button";
+import CustomButton from "/src/components/ui/button";
 
 export default function ButtonConnect() {
   const [awaitingUserPermission, setAwaitingUserPermission] = useState(false);
@@ -8,9 +8,10 @@ export default function ButtonConnect() {
   return (
     <EthereumContext.Consumer>
       {(value) => (
-        <Button
+        <CustomButton
+          modifiers='small'
           id="buttonConnect"
-          disabled={awaitingUserPermission}
+          disabled={true}
           onClick={() => {
             value.accounts.length < 1 ? connect() : console.log("There is a connected account already.");
           }}
@@ -18,7 +19,7 @@ export default function ButtonConnect() {
             <span key={value.accounts[0]} className='blink'>
             {value.accounts[0] || (awaitingUserPermission ? 'Awaiting User Permission' : "Connect Account")}
               </span>
-        </Button>
+        </CustomButton>
       )}
     </EthereumContext.Consumer>
   );

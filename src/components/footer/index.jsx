@@ -8,7 +8,6 @@ export default function Index() {
 
   return <footer className={styles.footer}>
     <div className={styles.containerSocial}>
-      <small>asdasd</small>
       <a
         href="https://github.com/proveuswrong"
         target="_blank"

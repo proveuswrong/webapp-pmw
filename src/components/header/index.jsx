@@ -11,7 +11,7 @@ export default function Header() {
       <Logo className={styles.logo}/>
       <hr className={styles.hrBelowLogo}/>
       <div className={styles.subtitle}>Accurate and Relevant News</div>
-      <hr/>
+      <hr className={styles.hrBelowSubtitle}/>
       <nav className={styles.nav}>
         <h2 hide="">Navigation</h2>
         <NavLink to="/">Home</NavLink> <NavLink to="browse/">Browse</NavLink> <NavLink to="create/">Create</NavLink>

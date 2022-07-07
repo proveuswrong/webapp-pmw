@@ -29,8 +29,10 @@
 hr {
   border: none;
   height: 0.025rem;
-  background: map-get(colors.$colorBackground, separator);
+  background: map-get(colors.$palette, 'grey', 'beta');
+  margin-block: 0;
 }
+
 
 footer svg {
   height: 1.3rem;
