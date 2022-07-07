@@ -1,7 +1,8 @@
 import React from "react";
 import {EthereumContext, chains} from "../../data/ethereumProvider";
 import {DownOutlined, UserOutlined} from '@ant-design/icons';
-import {Button, Dropdown, Menu, message, Space, Tooltip} from 'antd';
+import {Dropdown, Menu, message, Space, Tooltip} from 'antd';
+import Button from "/src/components/button";
 
 import {utils} from "ethers";
 
@@ -26,7 +27,7 @@ const menu = (
 );
 
 
-export default function ButtonSelectNetwork({className}) {
+export default function ButtonSelectNetwork() {
 
   return (
     <EthereumContext.Consumer>
@@ -37,6 +38,7 @@ export default function ButtonSelectNetwork({className}) {
             <DownOutlined/>
           </Button>
         </Dropdown>
+
       )}
     </EthereumContext.Consumer>
   );

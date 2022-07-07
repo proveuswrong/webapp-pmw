@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {EthereumContext} from "../../data/ethereumProvider";
 import Button from "/src/components/button";
 
-export default function ButtonConnect({className}) {
+export default function ButtonConnect() {
   const [awaitingUserPermission, setAwaitingUserPermission] = useState(false);
 
   return (

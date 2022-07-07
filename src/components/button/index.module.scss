@@ -2,9 +2,11 @@
 
 
 .button {
+  height: auto !important;
   padding: 0.50rem 0.75rem;
   border-radius: 4px;
-  min-width: 3rem;
+  min-width: 5rem;
   border-width: 1px;
   font-size: typo.$xs;
+  color: red;
 }
