@@ -15,7 +15,8 @@ export default class EthereumProvider extends Component {
       isDeployedOnThisChain: false,
       metaEvidenceContents: [],
       blockNumber: 0,
-      ethersProvider: null
+      ethersProvider: null,
+      awaitingUserPermission: false
     }
 
     this.handleChainChanged = this.handleChainChanged.bind(this);
@@ -24,6 +25,7 @@ export default class EthereumProvider extends Component {
     this.handleDisconnected = this.handleDisconnected.bind(this);
     this.fetchMetaEvidenceContents = this.fetchMetaEvidenceContents.bind(this);
     this.handleMessage = this.handleMessage.bind(this);
+    this.requestAccounts = this.requestAccounts.bind(this);
 
     this.setState = this.setState.bind(this);
   }
@@ -38,7 +40,7 @@ export default class EthereumProvider extends Component {
   initializeProvider() {
     this.setState({isProviderDetected: true});
     ethereum.request({method: "eth_chainId"}).then(this.handleChainChanged);
-    // ethereum.request({method: "eth_accounts"}).then(this.handleAccountsChanged);
+    ethereum.request({method: "eth_accounts"}).then(this.handleAccountsChanged);
     ethereum.request({method: "eth_subscribe", params: ["newHeads"]})
     ethereum.request({method: "eth_blockNumber"}).then(result => this.setState({blockNumber: result}))
 
@@ -48,19 +50,30 @@ export default class EthereumProvider extends Component {
     ethereum.on("disconnect", this.handleDisconnected);
     ethereum.on("message", this.handleMessage)
 
-    // Ethers below - As I introduced Ethers now, this file needs a refactoring
 
     const provider = new ethers.providers.Web3Provider(window.ethereum)
-    // provider.send("eth_requestAccounts", []).then(this.handleAccountsChanged)
     this.setState({ethersProvider: provider})
   }
 
-  sendTransaction({method, to, value}) {
-    const tx = this.state.provider.getSigner().sendTransaction({
-      to,
-      value
-    });
+  // Public Functions //
+  async requestAccounts() {
+    await this.setState({awaitingUserPermission: true})
+    console.debug("Asking users permission to connect.");
+    ethereum
+      .request({method: "eth_requestAccounts"})
+      .catch((error) => {
+        if (error.code === 4001) {
+          // EIP-1193 userRejectedRequest error
+          console.log("User rejected connecting to Ethereum.");
+          this.setState({awaitingUserPermission: false})
+        } else if (error.code === -32002) {
+        } else {
+          this.setState({awaitingUserPermission: true})
+        }
+      })
   }
+
+  // End of Public Functions
 
 
   handleAccountsChanged(accounts) {
@@ -68,6 +81,8 @@ export default class EthereumProvider extends Component {
       console.log("Wallet locked.");
     } else {
       console.log("Accounts changed.");
+      this.setState({awaitingUserPermission: false})
+
     }
     this.setState({accounts: accounts});
   }
@@ -102,7 +117,7 @@ export default class EthereumProvider extends Component {
   async fetchMetaEvidenceContents(chainId) {
     console.log('Fetching all meta-evidences...');
     getAllMetaEvidences(chainId).then(console.log)
-    const rawMetaEvidenceList = (await getAllMetaEvidences(chainId)).map(item => item.uri)
+    const rawMetaEvidenceList = (await getAllMetaEvidences(chainId))?.map(item => item.uri)
     const result = await Promise.allSettled(rawMetaEvidenceList.map(metaEvidenceURI =>
       fetch(ipfsGateway + metaEvidenceURI).then(r => r.json())
     ))
@@ -110,7 +125,7 @@ export default class EthereumProvider extends Component {
   }
 
   render = () =>
-    <EthereumContext.Provider value={this.state}> {this.props.children}</EthereumContext.Provider>;
+    <EthereumContext.Provider value={{...this.state, requestAccounts: this.requestAccounts}}> {this.props.children}</EthereumContext.Provider>;
 }
 export const EthereumContext = React.createContext();
 

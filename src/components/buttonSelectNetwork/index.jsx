@@ -17,7 +17,7 @@ const handleMenuClick = (e) => {
 
 
 const menu = (
-  <Menu
+  <Menu asd={'asd'}
     onClick={handleMenuClick}
     items={
       Object.entries(chains).map(([index, chain]) => {
@@ -32,11 +32,11 @@ export default function ButtonSelectNetwork() {
 
   return (
     <EthereumContext.Consumer>
-      {(value) => (
+      {(ethereum) => (
         <CustomDropdown modifiers="small secondary" overlay={menu}>
           <Button
             id="buttonSelectNetwork" >
-            <span key={value.chainId} className='blink'>{chains[value.chainId]?.shortname || "Unsupported Network"}</span>
+            <span key={ethereum?.chainId} className='blink'>{chains[ethereum?.chainId]?.shortname || "Unsupported Network"}</span>
             <DownOutlined/>
           </Button>
         </CustomDropdown>
