@@ -4,6 +4,7 @@ import {DownOutlined, UserOutlined} from '@ant-design/icons';
 import {Button, Dropdown, Menu, message, Space, Tooltip} from 'antd';
 import CustomButton from "/src/components/ui/button";
 import CustomDropdown from "/src/components/ui/dropdown";
+import MenuItem from "/src/components/ui/menuItem"
 
 import {utils} from "ethers";
 
@@ -16,13 +17,14 @@ const handleMenuClick = (e) => {
 };
 
 
+// TODO Custom menu item
 const menu = (
-  <Menu asd={'asd'}
+  <Menu
     onClick={handleMenuClick}
-    items={
-      Object.entries(chains).map(([index, chain]) => {
+    items={[
+      ...Object.entries(chains).map(([index, chain]) => {
         return {label: chain.name, key: index}
-      })
+      }),   <MenuItem key={23} label="not working">asdasd</MenuItem>]
     }
   />
 );
