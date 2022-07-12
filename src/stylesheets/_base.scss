@@ -2,8 +2,8 @@
 @use "src/stylesheets/variables/typo";
 
 @font-face {
-  font-family: 'EdwardianScriptITC';
-  src: url('../assets/fonts/EdwardianScriptITC.woff2') format('woff2');
+  font-family: "EdwardianScriptITC";
+  src: url("../assets/fonts/EdwardianScriptITC.woff2") format("woff2");
 }
 
 .displayBlock {
@@ -18,9 +18,7 @@
   60% {
     opacity: 100%;
   }
-
 }
-
 
 .blink {
   animation: blinker 2s running forwards;
@@ -29,10 +27,9 @@
 hr {
   border: none;
   height: 0.025rem;
-  background: map-get(colors.$palette, 'grey', 'beta');
+  background: map-get(colors.$palette, "grey", "beta");
   margin-block: 0;
 }
-
 
 footer svg {
   height: 1.3rem;
