@@ -159,7 +159,7 @@ export default function Claim() {
           blocks ago
         </p>
 
-        <p>Claim Owner: {fetchingClaim ? "fetching" : claim?.owner}</p>
+        <p>Reporter: {fetchingClaim ? "fetching" : claim?.owner}</p>
         {claim && (
           <p>
             {" "}
