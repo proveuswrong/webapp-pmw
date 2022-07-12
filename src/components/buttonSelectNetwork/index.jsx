@@ -9,6 +9,7 @@ import MenuItem from "/src/components/ui/menuItem";
 import { utils } from "ethers";
 
 const handleMenuClick = (e) => {
+  console.log(e);
   ethereum.request({
     method: "wallet_switchEthereumChain",
     params: [{ chainId: e.key }],
