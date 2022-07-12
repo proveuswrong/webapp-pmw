@@ -6,7 +6,7 @@ import * as styles from "./index.module.scss";
 export default function Index() {
   return (
     <footer className={styles.footer}>
-      <div className={styles.containerText}>This is a work in progress. Expect broken functionality and many bugs.</div>
+      <div className={styles.containerText}>This is a work-in-progress. Expect broken functionality and many bugs.</div>
       <div className={styles.containerSocial}>
         <a href="https://github.com/proveuswrong" target="_blank" rel="noopener noreferrer" title="GitHub Organization">
           <span style={{ display: "none" }}>Link to GitHub profile</span>
