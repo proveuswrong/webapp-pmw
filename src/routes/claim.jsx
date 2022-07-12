@@ -121,14 +121,12 @@ export default function Claim() {
         </p>
         {claim?.disputeID && (
           <p>
-            Dispute{" "}
+            Dispute ID:{" "}
             <a href={`https://resolve.kleros.io/cases/${claim.disputeID}`} target="_blank" rel="noopener noreferrer">
-              ID
+              <span key={claim?.disputeID} className="blink">
+                {claim?.disputeID}
+              </span>
             </a>
-            :{" "}
-            <span key={claim?.disputeID} className="blink">
-              {claim?.disputeID}
-            </span>
           </p>
         )}
         {/*We need to get arbitrator address somehow. Last thing I tried is to add this field to Claim Entity on Subgraph. See 0.0.19*/}
