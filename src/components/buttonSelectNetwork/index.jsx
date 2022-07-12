@@ -17,17 +17,11 @@ const handleMenuClick = (e) => {
 
 // TODO Custom menu item
 const menu = (
-  <Menu
-    onClick={handleMenuClick}
-    items={[
-      ...Object.entries(chains).map(([key, value], index) => {
-        return { label: value.name, key: key };
-      }),
-      <MenuItem key={23} label="not working">
-        asdasd
-      </MenuItem>,
-    ]}
-  />
+  <Menu onClick={handleMenuClick}>
+    {Object.entries(chains).map(([key, value], index) => {
+      return <MenuItem key={key}>{value?.name}</MenuItem>;
+    })}
+  </Menu>
 );
 
 export default function ButtonSelectNetwork() {

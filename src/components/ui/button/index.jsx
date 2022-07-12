@@ -4,7 +4,7 @@ import { Button as ButtonFromAntDesign } from "antd";
 
 export default function Button(props) {
   return (
-    <ButtonFromAntDesign className={`${styles.button} ${props.modifiers}`} onClick={props.onClick}>
+    <ButtonFromAntDesign className={`${styles.button} ${props.modifiers}`} {...props}>
       {props.children}
     </ButtonFromAntDesign>
   );
